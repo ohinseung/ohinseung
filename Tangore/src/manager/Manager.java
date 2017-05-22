@@ -71,4 +71,7 @@ public interface Manager {
 	 * @param newData
 	 */
 	public boolean updateTango(Tango newData) throws ManagerException;
+
+	public boolean deleteAll() throws ManagerException;
+
 }

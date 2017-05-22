@@ -127,7 +127,7 @@ public class serverManager implements Manager{
 	}
 
 	@Override
-	public boolean deleteTango(String row_id) throws ManagerException {
+	public boolean deleteTango(int row_id) throws ManagerException {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -146,7 +146,7 @@ public class serverManager implements Manager{
 
 
 	@Override
-	public boolean deleteTango(int row_id) throws ManagerException {
+	public boolean deleteAll() throws ManagerException {
 		// TODO Auto-generated method stub
 		return false;
 	}
