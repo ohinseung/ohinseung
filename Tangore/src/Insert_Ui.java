@@ -8,16 +8,25 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+
 import javax.swing.JTextField;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 
-public class Insert_Ui extends JFrame {
-
+public class Insert_Ui extends JFrame 
+{
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	private JTextField add_Hanja;
+	private JTextField add_Hiragana;
+	private JTextField add_Meaning;
 
+	JLabel	image;
 	/**
 	 * Launch the application.
 	 */
@@ -29,8 +38,8 @@ public class Insert_Ui extends JFrame {
 			{
 				try 
 				{
-					Insert_Ui frame = new Insert_Ui();
-					frame.setVisible(true);
+					Insert_Ui insert_ui_frame = new Insert_Ui();
+					insert_ui_frame.setVisible(true);
 				}
 				
 				catch (Exception e) 
@@ -52,58 +61,100 @@ public class Insert_Ui extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+//		제목 입력
 		setTitle("입력");
 		
-		JLabel label = new JLabel("사진");
-		label.setFont(new Font("굴림", Font.PLAIN, 25));
-		label.setBounds(50, 39, 56, 36);
-		contentPane.add(label);
+//		사진 Label
+		JLabel image_Label = new JLabel("사진");
+		image_Label.setFont(new Font("굴림", Font.PLAIN, 25));
+		image_Label.setBounds(50, 39, 56, 36);
+		contentPane.add(image_Label);
 		
-		JLabel label_1 = new JLabel("한자");
-		label_1.setFont(new Font("굴림", Font.PLAIN, 25));
-		label_1.setBounds(173, 39, 56, 36);
-		contentPane.add(label_1);
+//		한자 Label
+		JLabel hanja_Label = new JLabel("한자");
+		hanja_Label.setFont(new Font("굴림", Font.PLAIN, 25));
+		hanja_Label.setBounds(173, 39, 56, 36);
+		contentPane.add(hanja_Label);
 		
-		JLabel label_2 = new JLabel("히라가나");
-		label_2.setFont(new Font("굴림", Font.PLAIN, 25));
-		label_2.setBounds(298, 39, 101, 36);
-		contentPane.add(label_2);
+//		히라가나 Label
+		JLabel hiragana_Label = new JLabel("히라가나");
+		hiragana_Label.setFont(new Font("굴림", Font.PLAIN, 25));
+		hiragana_Label.setBounds(298, 39, 101, 36);
+		contentPane.add(hiragana_Label);
 		
-		JLabel label_3 = new JLabel("뜻");
-		label_3.setFont(new Font("굴림", Font.PLAIN, 25));
-		label_3.setBounds(495, 39, 32, 36);
-		contentPane.add(label_3);
+//		뜻 Label
+		JLabel meaning_Label = new JLabel("뜻");
+		meaning_Label.setFont(new Font("굴림", Font.PLAIN, 25));
+		meaning_Label.setBounds(495, 39, 32, 36);
+		contentPane.add(meaning_Label);
 		
-		textField = new JTextField();
-		textField.setFont(new Font("굴림", Font.PLAIN, 23));
-		textField.setBounds(144, 87, 101, 36);
-		contentPane.add(textField);
-		textField.setColumns(10);
+//		한자 Textfield
+		add_Hanja = new JTextField();
+		add_Hanja.setFont(new Font("굴림", Font.PLAIN, 23));
+		add_Hanja.setBounds(144, 87, 101, 36);
+		contentPane.add(add_Hanja);
+		add_Hanja.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("굴림", Font.PLAIN, 23));
-		textField_1.setColumns(10);
-		textField_1.setBounds(286, 87, 130, 36);
-		contentPane.add(textField_1);
+//		히라가나 Textfield
+		add_Hiragana = new JTextField();
+		add_Hiragana.setFont(new Font("굴림", Font.PLAIN, 23));
+		add_Hiragana.setColumns(10);
+		add_Hiragana.setBounds(286, 87, 130, 36);
+		contentPane.add(add_Hiragana);
 		
-		textField_2 = new JTextField();
-		textField_2.setFont(new Font("굴림", Font.PLAIN, 23));
-		textField_2.setColumns(10);
-		textField_2.setBounds(457, 87, 101, 36);
-		contentPane.add(textField_2);
+//		뜻 Textfield
+		add_Meaning = new JTextField();
+		add_Meaning.setFont(new Font("굴림", Font.PLAIN, 23));
+		add_Meaning.setColumns(10);
+		add_Meaning.setBounds(457, 87, 101, 36);
+		contentPane.add(add_Meaning);
 		
-		JButton btnNewButton = new JButton("추가");
-		btnNewButton.setBounds(14, 87, 116, 36);
-		contentPane.add(btnNewButton);
+//		사진 추가 버튼
+		JButton add_Image_btn = new JButton("추가");
+		add_Image_btn.setBounds(14, 87, 116, 36);
+		contentPane.add(add_Image_btn);
 		
-		JButton btnNewButton_1 = new JButton("확인");
-		btnNewButton_1.setFont(new Font("굴림", Font.PLAIN, 30));
-		btnNewButton_1.setBounds(60, 158, 143, 59);
-		contentPane.add(btnNewButton_1);
+//		확인 버튼
+		JButton input_Ok = new JButton("확인");
+		input_Ok.setFont(new Font("굴림", Font.PLAIN, 30));
+		input_Ok.setBounds(60, 158, 143, 59);
+		contentPane.add(input_Ok);
 		
-		JButton button = new JButton("취소");
-		button.setFont(new Font("굴림", Font.PLAIN, 30));
-		button.setBounds(366, 158, 143, 59);
-		contentPane.add(button);
+		JButton input_Cancel = new JButton("취소");
+		input_Cancel.setFont(new Font("굴림", Font.PLAIN, 30));
+		input_Cancel.setBounds(366, 158, 143, 59);
+		contentPane.add(input_Cancel);
+		
+//		취소 버튼
+//		취소 버튼을 누르면 swing창 종료
+		input_Cancel.addActionListener(new ActionListener() 
+		{
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				System.exit(0);
+			}
+		});
+		
+//		사진 추가 버튼 누르면 사진 고르는 창 나오기.
+		add_Image_btn.addActionListener(new ActionListener() 
+		{
+			@Override
+			public void actionPerformed(ActionEvent ae) 
+			{
+				JFileChooser fc = new JFileChooser();
+                int result = fc.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File file = fc.getSelectedFile();
+                    try {
+                        image.setIcon(new ImageIcon(ImageIO.read(file)));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+			}
+		});
+		
 	}
 }
