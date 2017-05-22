@@ -24,7 +24,7 @@ public interface Manager {
 	 *         null을 반환한다.
 	 */
 	
-	public Tango findTango_row_id(String row_id) throws ManagerException;
+	public Tango findTango_row_id(int row_id) throws ManagerException;
 	/**
 	 * 등록된 Tango 객체를 row_id로 검색한다.
 	 * 
@@ -55,7 +55,7 @@ public interface Manager {
 	 * @return 주어진 시퀀스 넘버와 일치되는 Tango 객체의 삭제 결과, Tango 배열에 등록된 객체들 중 파라메터로 전달된
 	 *         시퀀스 넘버와 일치되는 Tango 객체가 발견되어 삭제를 성공하면 true를 그렇지 않으면 false를 반환
 	 */
-	public boolean deleteTango(String row_id) throws ManagerException;
+	public boolean deleteTango(int row_id) throws ManagerException;
 
 	/**
 	 * Tango 객체 정보 리스트를 읽어들인다.
