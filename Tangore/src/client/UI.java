@@ -62,7 +62,7 @@ public class UI extends JFrame implements ActionListener{
 			insertUi.setVisible(true);
 		}
 		else if(source == btn_tangoshou) {
-			
+			//아직 미작성
 		}
 		else if(source == btn_tangoQuiz) {
 			
