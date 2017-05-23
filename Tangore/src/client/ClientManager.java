@@ -68,9 +68,9 @@ public class ClientManager implements Manager{
 	 *            찾고자 하는 단어의 뜻
 	 */
 	@Override
-	public Tango findTango_meaing(String meaning) throws ManagerException {
+	public ArrayList<Tango> findTango_meaing(String meaning) throws ManagerException {
 		Object[] msg = {"find_meaning", meaning};
-		Tango findResult = (Tango) sendRequest(msg);
+		ArrayList<Tango> findResult = (ArrayList<Tango>) sendRequest(msg);
 		return findResult;
 	}
 	
@@ -83,9 +83,9 @@ public class ClientManager implements Manager{
 	 *            찾고자 하는 시퀀스 넘버
 	 */
 	@Override
-	public Tango findTango_row_id(int row_id) throws ManagerException {
+	public ArrayList<Tango> findTango_row_id(int row_id) throws ManagerException {
 		Object[] msg = {"find_row_id", row_id};
-		Tango findResult = (Tango) sendRequest(msg);
+		ArrayList<Tango> findResult = (ArrayList<Tango>) sendRequest(msg);
 		return findResult;
 	}
 	
@@ -96,9 +96,9 @@ public class ClientManager implements Manager{
 	 *            찾고자 하는 한자
 	 */
 	@Override
-	public Tango findTango_hanja(String hanja) throws ManagerException {
+	public ArrayList<Tango> findTango_hanja(String hanja) throws ManagerException {
 		Object[] msg = {"find_hanja", hanja};
-		Tango findResult = (Tango) sendRequest(msg);
+		ArrayList<Tango> findResult = (ArrayList<Tango>) sendRequest(msg);
 		return findResult;
 	}
 	/**
@@ -108,9 +108,9 @@ public class ClientManager implements Manager{
 	 *            찾고자 하는 히라가나
 	 */
 	@Override
-	public Tango findTango_hiragana(String hiragana) throws ManagerException {
+	public ArrayList<Tango> findTango_hiragana(String hiragana) throws ManagerException {
 		Object[] msg = {"find_hiragana", hiragana};
-		Tango findResult = (Tango) sendRequest(msg);
+		ArrayList<Tango> findResult = (ArrayList<Tango>) sendRequest(msg);
 		return findResult;
 	}
 	/**

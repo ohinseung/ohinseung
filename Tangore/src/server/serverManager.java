@@ -53,8 +53,8 @@ public class serverManager implements Manager{
 	
 
 	@Override
-	public Tango findTango_row_id(int row_id) throws ManagerException {
-		Tango t = null;
+	public ArrayList<Tango> findTango_row_id(int row_id) throws ManagerException {
+		ArrayList<Tango> list = new ArrayList<>();
 		Connection con = null;
 		
 		try {
@@ -64,7 +64,7 @@ public class serverManager implements Manager{
 			pstmt.setInt(1, row_id);
 			ResultSet rs = pstmt.executeQuery();
 			
-			if(rs.next()) {
+			while(rs.next()) {
 				String hanja = rs.getString("hanja");
 				String hiragana = rs.getString("hiragana");
 				String meaning = rs.getString("meaning");
@@ -74,7 +74,8 @@ public class serverManager implements Manager{
 				BufferedImage bufferedImage = ImageIO.read(in);
 				ImageIcon image = new ImageIcon(bufferedImage);
 				
-				t = new Tango(row_id, hanja, hiragana, meaning, image);
+				Tango tango = new Tango(row_id, hanja, hiragana, meaning, image);
+				list.add(tango);				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -82,12 +83,12 @@ public class serverManager implements Manager{
 			ConnectionManager.close(con);
 		}
 		
-		return t;
+		return list;
 	}
 
 	@Override
-	public Tango findTango_hanja(String hanja) throws ManagerException {
-		Tango t = null;
+	public ArrayList<Tango> findTango_hanja(String hanja) throws ManagerException {
+		ArrayList<Tango> list = new ArrayList<>();
 		Connection con = null;
 		
 		try {
@@ -106,7 +107,7 @@ public class serverManager implements Manager{
 				// BufferedImage를 생성하면 ImageIO를 통해 브라우저에 출력하기가 쉽다.
 				BufferedImage bufferedImage = ImageIO.read(in);
 				ImageIcon image = new ImageIcon(bufferedImage);
-				t = new Tango(row_id, hanja, hiragana, meaning, image);
+				Tango tango 	= new Tango(row_id, hanja, hiragana, meaning, image);
 				
 			}
 		} catch (Exception e) {
@@ -115,12 +116,12 @@ public class serverManager implements Manager{
 			ConnectionManager.close(con);
 		}
 		
-		return t;
+		return list;
 	}
 
 	@Override
-	public Tango findTango_hiragana(String hiragana) throws ManagerException {
-		Tango t = null;
+	public ArrayList<Tango> findTango_hiragana(String hiragana) throws ManagerException {
+		ArrayList<Tango> list = new ArrayList<>();
 		Connection con = null;
 		
 		try {
@@ -139,7 +140,7 @@ public class serverManager implements Manager{
 				// BufferedImage를 생성하면 ImageIO를 통해 브라우저에 출력하기가 쉽다.
 				BufferedImage bufferedImage = ImageIO.read(in);
 				ImageIcon image = new ImageIcon(bufferedImage);
-				t = new Tango(row_id, hanja, hiragana, meaning, image);
+				Tango tango 	= new Tango(row_id, hanja, hiragana, meaning, image);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -147,11 +148,11 @@ public class serverManager implements Manager{
 			ConnectionManager.close(con);
 		}
 		
-		return t;
+		return list;
 	}
 	@Override
-	public Tango findTango_meaing(String meaning) throws ManagerException {
-		Tango t = null;
+	public ArrayList<Tango> findTango_meaing(String meaning) throws ManagerException {
+		ArrayList<Tango> list = new ArrayList<>();
 		Connection con = null;
 		
 		try {
@@ -171,7 +172,7 @@ public class serverManager implements Manager{
 				BufferedImage bufferedImage = ImageIO.read(in);
 				ImageIcon image = new ImageIcon(bufferedImage);
 				
-				t = new Tango(row_id, hanja, hiragana, meaning, image);
+				Tango tango 	= new Tango(row_id, hanja, hiragana, meaning, image);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -179,7 +180,7 @@ public class serverManager implements Manager{
 			ConnectionManager.close(con);
 		}
 		
-		return t;
+		return list;
 	}
 
 	@Override
@@ -205,7 +206,6 @@ public class serverManager implements Manager{
 				String hiragana = rs.getString("hiragana");
 				String hanja 	= rs.getString("hanja");
 				String meaning 	= rs.getString("meaning");
-				//Blob image 		= rs.getBlob("image");
 				// 바이너리 데이터를 저장하고 있는 컬럼으로부터 데이터를 가져온다
 				InputStream in = rs.getBinaryStream("image");
 				// BufferedImage를 생성하면 ImageIO를 통해 브라우저에 출력하기가 쉽다.

@@ -24,7 +24,7 @@ public interface Manager {
 	 *         null을 반환한다.
 	 */
 	
-	public Tango findTango_row_id(int row_id) throws ManagerException;
+	public ArrayList<Tango> findTango_row_id(int row_id) throws ManagerException;
 	/**
 	 * 등록된 Tango 객체를 row_id로 검색한다.
 	 * 
@@ -34,7 +34,7 @@ public interface Manager {
 	 *         null을 반환한다.
 	 */
 	
-	public Tango findTango_hanja(String hanja) throws ManagerException;
+	public ArrayList<Tango>  findTango_hanja(String hanja) throws ManagerException;
 	/**
 	 * 등록된 Tango 객체를 row_id로 검색한다.
 	 * 
@@ -44,7 +44,7 @@ public interface Manager {
 	 *         null을 반환한다.
 	 */
 	
-	public Tango findTango_hiragana(String hiragana) throws ManagerException;
+	public ArrayList<Tango>  findTango_hiragana(String hiragana) throws ManagerException;
 
 
 	/**
@@ -57,7 +57,7 @@ public interface Manager {
 	 */
 	public boolean deleteTango(int row_id) throws ManagerException;
 
-	Tango findTango_meaing(String meaning) throws ManagerException;
+	ArrayList<Tango>  findTango_meaing(String meaning) throws ManagerException;
 
 	
 	/**
