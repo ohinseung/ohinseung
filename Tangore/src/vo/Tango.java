@@ -2,7 +2,8 @@ package vo;
 
 import java.io.File;
 import java.io.Serializable;
-import java.sql.Blob;
+
+import javax.swing.ImageIcon;
 
 public class Tango implements Serializable{
 	
@@ -10,7 +11,7 @@ public class Tango implements Serializable{
 	private String hiragana;
 	private String hanja;
 	private String meaning;
-	private Blob image;
+	private ImageIcon image;
 	private File imageFile;
 	
 	
@@ -18,7 +19,7 @@ public class Tango implements Serializable{
 	public Tango() {
 		super();
 	}
-	public Tango(int row_id, String hiragana, String hanja, String meaning, Blob image) {
+	public Tango(int row_id, String hiragana, String hanja, String meaning, ImageIcon image) {
 		super();
 		this.row_id = row_id;
 		this.hiragana = hiragana;
@@ -26,7 +27,7 @@ public class Tango implements Serializable{
 		this.meaning = meaning;
 		this.image = image;
 	}
-	public Tango(String hiragana, String hanja, String meaning, Blob image) {
+	public Tango(String hiragana, String hanja, String meaning, ImageIcon image) {
 		super();
 		
 		this.hiragana = hiragana;
@@ -67,10 +68,10 @@ public class Tango implements Serializable{
 	public void setMeaning(String meaning) {
 		this.meaning = meaning;
 	}
-	public Blob getimage() {
+	public ImageIcon getimage() {
 		return image;
 	}
-	public void setImage(Blob image) {
+	public void setImage(ImageIcon image) {
 		this.image = image;
 	}	
 	public File getimageFile() {

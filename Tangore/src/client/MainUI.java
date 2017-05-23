@@ -5,11 +5,14 @@ package client;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import vo.Tango;
 
 public class MainUI extends JFrame implements ActionListener{
 	
@@ -57,12 +60,13 @@ public class MainUI extends JFrame implements ActionListener{
 		if(source == btn_tangoInsert) {
 			//등록버튼을 눌렀을 시 메인메뉴를 보이지 않게 하고
 			//등록 UI를 visible로 설정한다.
-			InsertUI insertUi = new InsertUI();
-			setVisible(false);
-			insertUi.setVisible(true);
+			new InsertUI();
+			dispose();
 		}
 		else if(source == btn_tangoshou) {
-			//아직 미작성
+			//검색 UI생성
+			new SearchUI();
+			dispose();
 		}
 		else if(source == btn_tangoQuiz) {
 			

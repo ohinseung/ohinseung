@@ -17,7 +17,7 @@ public class ClientManager implements Manager{
 	
 	private final int PORT = 7777; // 포트 번호
 
-	private ArrayList<Tango> list; // tango 객체 정보 리스트
+	private ArrayList<Tango> list = new ArrayList<>(); // tango 객체 정보 리스트
 
 	private Socket socket;	
 	private InputStream is; // 인풋 스트림

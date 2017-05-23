@@ -40,6 +40,7 @@ public class InsertUI extends JFrame
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setVisible(true);
 		
 //		제목 입력
 		setTitle("입력");
@@ -112,6 +113,7 @@ public class InsertUI extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
+				MainUI mu = new MainUI();
 				dispose();
 			}
 		});
@@ -142,19 +144,22 @@ public class InsertUI extends JFrame
 				String hiragana = add_Hiragana.getText();
 				String hanja = add_Hanja.getText();
 				String meaning = add_Meaning.getText();
-				Tango tango = new Tango(hiragana, hanja, meaning, imageFile);
-				boolean insertResult = false;
-				try {
-					System.out.println(tango.getHanja().toString()+tango.getHiragana().toString()+tango.getMeaning().toString()+tango.getimageFile().toString());
-					insertResult = manager.insertTango(tango);
-				} catch (ManagerException e1) {
-					e1.printStackTrace();
+				if(hiragana.equals("")) JOptionPane.showMessageDialog(null, "아무것도 입력되지 않았습니다.");
+				else{
+					Tango tango = new Tango(hiragana, hanja, meaning, imageFile);
+					boolean insertResult = false;
+					try {
+						insertResult = manager.insertTango(tango);
+					} catch (ManagerException e1) {
+						e1.printStackTrace();
+					}
+					
+					if(insertResult){
+						JOptionPane.showMessageDialog(null, "등록을 성공 하였습니다.");
+						MainUI mu = new MainUI();
+						dispose();
+					}		
 				}
-				
-				if(insertResult){
-					JOptionPane.showMessageDialog(null, "등록을 성공 하였습니다.");
-					dispose();					
-				}				
 			}
 		});		
 	}
