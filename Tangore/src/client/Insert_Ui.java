@@ -1,61 +1,36 @@
 package client;
-/* 작성자 : 이승현
- * 작성일 : 2017-05-22
- * */
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import javax.swing.JTextField;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 public class Insert_Ui extends JFrame 
 {
 	private JPanel contentPane;
-	private JTextField add_Hanja;
-	private JTextField add_Hiragana;
-	private JTextField add_Meaning;
-
-	JLabel	image;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) 
-	{
-		EventQueue.invokeLater(new Runnable() 
-		{
-			public void run()
-			{
-				try 
-				{
-					Insert_Ui insert_ui_frame = new Insert_Ui();
-					insert_ui_frame.setVisible(true);
-				}
-				
-				catch (Exception e) 
-				{
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	public JTextField add_Hanja;
+	public JTextField add_Hiragana;
+	public JTextField add_Meaning;
+	public BufferedImage image;
+	public File imageFile;
+	private ClientManager manager; // 요청과 관련된 처리를 하기 위해 생성한 ClientManager 클래스의 객체
+	
 	/**
 	 * Create the frame.
 	 */
 	public Insert_Ui() 
-	{
+	{	
+		//manager = new ClientManager();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 598, 296);
 		contentPane = new JPanel();
@@ -134,7 +109,7 @@ public class Insert_Ui extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
-				System.exit(0);
+				setVisible(false);
 			}
 		});
 		
@@ -147,15 +122,32 @@ public class Insert_Ui extends JFrame
 				JFileChooser fc = new JFileChooser();
                 int result = fc.showOpenDialog(null);
                 if (result == JFileChooser.APPROVE_OPTION) {
-                    File file = fc.getSelectedFile();
-                    try {
-                        image.setIcon(new ImageIcon(ImageIO.read(file)));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    imageFile = fc.getSelectedFile();
+                    
                 }
+                
 			}
 		});
 		
+//		확인 버튼
+//		확인 버튼을 누르면 swing창 종료 + 추가되는 단어반환
+		
+		input_Ok.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String hiragana = add_Hiragana.getText();
+				String hanja = add_Hanja.getText();
+				String meaning = add_Meaning.getText();
+				try {
+					image = ImageIO.read(imageFile);
+				} catch (IOException io) {
+					io.printStackTrace();
+				}				
+				
+				setVisible(false);
+			}
+		});		
 	}
+	
 }

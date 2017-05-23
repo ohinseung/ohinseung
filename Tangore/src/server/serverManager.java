@@ -1,5 +1,6 @@
 package server;
 
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,7 +28,7 @@ public class serverManager implements Manager{
 			//한자
 			pstmt.setString(4, tango.getMeaning());
 			//히라가나
-			pstmt.setString(5, tango.getImage_url());
+			pstmt.setBlob(5, tango.getimage());
 			//뜻
 		}
 		catch (Exception e) {
@@ -55,9 +56,9 @@ public class serverManager implements Manager{
 				String hanja = rs.getString("hanja");
 				String hiragana = rs.getString("hiragana");
 				String meaning = rs.getString("meaning");
-				String image_url = rs.getString("image_url");
+				Blob image = rs.getBlob("image");
 				
-				t = new Tango(row_id, hanja, hiragana, meaning, image_url);
+				t = new Tango(row_id, hanja, hiragana, meaning, image);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -84,9 +85,9 @@ public class serverManager implements Manager{
 				int row_id = rs.getInt("row_id");
 				String hiragana = rs.getString("hiragana");
 				String meaning = rs.getString("meaning");
-				String image_url = rs.getString("image_url");
 				
-				t = new Tango(row_id, hanja, hiragana, meaning, image_url);
+				
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -113,9 +114,9 @@ public class serverManager implements Manager{
 				int row_id = rs.getInt("row_id");
 				String hanja = rs.getString("hanja");
 				String meaning = rs.getString("meaning");
-				String image_url = rs.getString("image_url");
+				Blob image = rs.getBlob("image");
 				
-				t = new Tango(row_id, hanja, hiragana, meaning, image_url);
+				t = new Tango(row_id, hanja, hiragana, meaning, image);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -127,7 +128,7 @@ public class serverManager implements Manager{
 	}
 
 	@Override
-	public boolean deleteTango(String row_id) throws ManagerException {
+	public boolean deleteTango(int row_id) throws ManagerException {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -143,11 +144,5 @@ public class serverManager implements Manager{
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-
-	@Override
-	public boolean deleteTango(int row_id) throws ManagerException {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	
 }

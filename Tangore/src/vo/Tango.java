@@ -1,27 +1,30 @@
 package vo;
 
+import java.awt.image.BufferedImage;
+import java.sql.Blob;
+
 public class Tango {
 	
 	private int row_id;
 	private String hiragana;
 	private String hanja;
 	private String meaning;
-	private String image_url;
+	private Blob image;
 	
 	
 	
 	public Tango() {
 		super();
 	}
-
-	public Tango(int row_id, String hiragana, String hanja, String meaning, String image_url) {
+	public Tango(int row_id, String hiragana, String hanja, String meaning, Blob image) {
 		super();
 		this.row_id = row_id;
 		this.hiragana = hiragana;
 		this.hanja = hanja;
 		this.meaning = meaning;
-		this.image_url = image_url;
+		this.image = image;
 	}
+	
 	public int getRow_id() {
 		return row_id;
 	}
@@ -46,10 +49,10 @@ public class Tango {
 	public void setMeaning(String meaning) {
 		this.meaning = meaning;
 	}
-	public String getImage_url() {
-		return image_url;
+	public Blob getimage() {
+		return image;
 	}
-	public void setImage_url(String image_url) {
-		this.image_url = image_url;
+	public void setImage(Blob image) {
+		this.image = image;
 	}	
 }
