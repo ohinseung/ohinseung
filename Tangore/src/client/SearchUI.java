@@ -1,94 +1,102 @@
 package client;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
+import exception.ManagerException;
 import vo.Tango;
 
-public class SearchUI extends JFrame {
-	private JPanel search_Panel; //일단 필요 없을지도 모름. 
-
-	private JButton delete_All_btn; //전체 삭제 버튼
-	private JButton update_btn;	//수정 버튼
-	private JButton delete_btn;	//삭제 버튼
-
-	private JLabel image_Label; 	//사진 레이블
-	private JLabel hanja_Label; 	//한자 레이블
-	private JLabel hiragana_Label; //히라가나 레이블
-	private JLabel meaning_Label; 	//뜻 레이블
-	private JLabel update_Label; 	//수정 레이블
-	private JLabel delete_Label; 	//삭제 레이블
+public class SearchUI{
 	
-	private ImageIcon image; 
 
-	private ArrayList<JButton> deleteButtonList;
-	private ArrayList<JButton> updateButtonList;
-	private ArrayList<JLabel> imageLabelList;
-	private ArrayList<JLabel> hanjaLabelList;
-	private ArrayList<JLabel> hiraganaLabelList;
-	private ArrayList<JLabel> meaningLabelList;
 	
-	public SearchUI(ArrayList<Tango> list){
-		setSize(800,600);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle("검색");
+
+	private String hanja;
+	private String hiragana;
+	private int row_id;
+	private String meaning;
+
+
+	public SearchUI()
+	{
 		
-		search_Panel 	= new JPanel();
-		image_Label 	= new JLabel("사진");
-		hanja_Label 	= new JLabel("한자");
-		hiragana_Label 	= new JLabel("히라가나");
-		meaning_Label 	= new JLabel("뜻");
-		update_Label 	= new JLabel("수정");
-		delete_Label 	= new JLabel("삭제");
+		JFrame jFrame = new JFrame("단어장");
 		
-		delete_All_btn = new JButton("전체 삭제");
+		JButton delete = new JButton("삭제");
+		JButton update = new JButton("수정");
+		ClientManager cm = new ClientManager();
 		
-		search_Panel.add(image_Label);
-		search_Panel.add(hanja_Label);
-		search_Panel.add(hiragana_Label);
-		search_Panel.add(meaning_Label);
-		search_Panel.add(update_Label);
-		search_Panel.add(delete_Label);
+		ArrayList<Tango> list = null;
+		try {
+			list = cm.getTangoList();
+		} catch (ManagerException e) {
+			e.printStackTrace();
+		}	
 		
-		for(Tango t: list){
-			//버튼 추가
-			delete_btn = new JButton("삭제");
-			update_btn = new JButton("수정");
-			
-			deleteButtonList.add(delete_btn);
-			updateButtonList.add(update_btn);
-			
-			//레이블추가
+		String columnNames[] =
+		{"번호" , "사진", "한자", "히라가나", "뜻" };
 		
-			
-		   	
-			
-		   // image_Label		= new JLabel(new ImageIcon(image));//사진 레이블
-			hanja_Label 	= new JLabel(t.getHanja()); 	//한자 레이블
-			hiragana_Label	= new JLabel(t.getHiragana()); //히라가나 레이블
-			meaning_Label 	= new JLabel(t.getMeaning()); 	//뜻 레이블
-			
-			imageLabelList.add(image_Label);
-			hanjaLabelList.add(hanja_Label);
-			hiraganaLabelList.add(hiragana_Label);
-			meaningLabelList.add(meaning_Label);	
-			
-			search_Panel.add(image_Label);		
-			search_Panel.add(hanja_Label);
-			search_Panel.add(hiragana_Label);
-			search_Panel.add(meaning_Label);		
-		}		
+		Object[][] rowData = {{new Integer(1),new ImageIcon(),"", "","",""} };
+					
+		//DefaultTableModel을 선언하고 데이터 담기
+		DefaultTableModel defaultTableModel = new DefaultTableModel(rowData, columnNames);
+
+		//JTable에 DefaultTableModel을 담기
+		JTable jTable = new JTable(defaultTableModel);
+		
+		//JScrollPane에 JTable을 담기
+		JScrollPane jScollPane = new JScrollPane(jTable);
+		jFrame.add(jScollPane);
+		
+		//행 한줄 추가!
+		for(Tango tango :list){
+			BufferedImage image =null;
+			try {
+				InputStream in = tango.getimage().getBinaryStream();
+				image = ImageIO.read(in);
+			} catch (SQLException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Object [] tangoRow = { tango.getRow_id(), new ImageIcon(image) ,tango.getHanja(), tango.getHiragana(),tango.getMeaning()};
+			defaultTableModel.addRow(tangoRow);
+		}
+		
+		//행과 열 갯수 구하기
+		System.out.println(defaultTableModel.getRowCount());
+		System.out.println(defaultTableModel.getColumnCount());
+		
+		//컬럼(열)의 index는 0부터 시작한다!!
+		System.out.println(defaultTableModel.getColumnName(0));
+				
+
+		jFrame.setSize(500, 300);
+		jFrame.setVisible(true);
+		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 	}
-	public static void main(String[] args) {
-		
+	
+	
+	public static void main(String[] args)
+	{
+		new SearchUI();
 	}
+
+
+	
 }
+
+

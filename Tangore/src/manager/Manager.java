@@ -57,6 +57,9 @@ public interface Manager {
 	 */
 	public boolean deleteTango(int row_id) throws ManagerException;
 
+	Tango findTango_meaing(String meaning) throws ManagerException;
+
+	
 	/**
 	 * Tango 객체 정보 리스트를 읽어들인다.
 	 * 
@@ -71,4 +74,8 @@ public interface Manager {
 	 * @param newData
 	 */
 	public boolean updateTango(Tango newData) throws ManagerException;
+
+	public boolean deleteAll() throws ManagerException;
+
+
 }

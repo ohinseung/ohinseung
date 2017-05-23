@@ -15,7 +15,7 @@ import vo.Tango;
 
 public class ClientManager implements Manager{
 	
-	private final int PORT = 6666; // 포트 번호
+	private final int PORT = 7777; // 포트 번호
 
 	private ArrayList<Tango> list; // tango 객체 정보 리스트
 
@@ -60,6 +60,22 @@ public class ClientManager implements Manager{
 		boolean insertResult = (Boolean) sendRequest(msg);
 		return insertResult;		
 	}
+	
+	/**
+	 * 요청된 meaning로 Tango 객체를 찾는다
+	 * 
+	 * @param mean
+	 *            찾고자 하는 단어의 뜻
+	 */
+	@Override
+	public Tango findTango_meaing(String meaning) throws ManagerException {
+		Object[] msg = {"find_meaning", meaning};
+		Tango findResult = (Tango) sendRequest(msg);
+		return findResult;
+	}
+	
+	
+	
 	/**
 	 * 지정된 row_id로 Tango 객체를 찾는다
 	 * 

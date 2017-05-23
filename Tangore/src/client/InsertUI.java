@@ -2,35 +2,38 @@ package client;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class Insert_Ui extends JFrame 
+import exception.ManagerException;
+import vo.Tango;
+
+public class InsertUI extends JFrame 
 {
 	private JPanel contentPane;
 	public JTextField add_Hanja;
 	public JTextField add_Hiragana;
 	public JTextField add_Meaning;
-	public BufferedImage image;
-	public File imageFile;
+	public File image;
 	private ClientManager manager; // 요청과 관련된 처리를 하기 위해 생성한 ClientManager 클래스의 객체
+	protected File imageFile;
 	
 	/**
 	 * Create the frame.
 	 */
-	public Insert_Ui() 
+	public InsertUI() 
 	{	
-		//manager = new ClientManager();
+		image=null;
+		
+		manager = new ClientManager();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 598, 296);
 		contentPane = new JPanel();
@@ -109,7 +112,7 @@ public class Insert_Ui extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
-				setVisible(false);
+				dispose();
 			}
 		});
 		
@@ -139,13 +142,19 @@ public class Insert_Ui extends JFrame
 				String hiragana = add_Hiragana.getText();
 				String hanja = add_Hanja.getText();
 				String meaning = add_Meaning.getText();
+				Tango tango = new Tango(hiragana, hanja, meaning, imageFile);
+				boolean insertResult = false;
 				try {
-					image = ImageIO.read(imageFile);
-				} catch (IOException io) {
-					io.printStackTrace();
-				}				
+					System.out.println(tango.getHanja().toString()+tango.getHiragana().toString()+tango.getMeaning().toString()+tango.getimageFile().toString());
+					insertResult = manager.insertTango(tango);
+				} catch (ManagerException e1) {
+					e1.printStackTrace();
+				}
 				
-				setVisible(false);
+				if(insertResult){
+					JOptionPane.showMessageDialog(null, "등록을 성공 하였습니다.");
+					dispose();					
+				}				
 			}
 		});		
 	}

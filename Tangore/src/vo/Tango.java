@@ -1,15 +1,17 @@
 package vo;
 
-import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.Serializable;
 import java.sql.Blob;
 
-public class Tango {
+public class Tango implements Serializable{
 	
 	private int row_id;
 	private String hiragana;
 	private String hanja;
 	private String meaning;
 	private Blob image;
+	private File imageFile;
 	
 	
 	
@@ -23,6 +25,22 @@ public class Tango {
 		this.hanja = hanja;
 		this.meaning = meaning;
 		this.image = image;
+	}
+	public Tango(String hiragana, String hanja, String meaning, Blob image) {
+		super();
+		
+		this.hiragana = hiragana;
+		this.hanja = hanja;
+		this.meaning = meaning;
+		this.image = image;
+	}
+	public Tango(String hiragana, String hanja, String meaning, File imageFile) {
+		super();
+		
+		this.hiragana = hiragana;
+		this.hanja = hanja;
+		this.meaning = meaning;
+		this.imageFile = imageFile;
 	}
 	
 	public int getRow_id() {
@@ -54,5 +72,11 @@ public class Tango {
 	}
 	public void setImage(Blob image) {
 		this.image = image;
+	}	
+	public File getimageFile() {
+		return imageFile;
+	}
+	public void setImageFile(File imageFile) {
+		this.imageFile = imageFile;
 	}	
 }
