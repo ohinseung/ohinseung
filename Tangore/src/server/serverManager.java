@@ -8,6 +8,7 @@ import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -184,7 +185,7 @@ public class serverManager implements Manager{
 
 	@Override
 	public boolean deleteTango(int row_id) throws ManagerException {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
@@ -226,14 +227,46 @@ public class serverManager implements Manager{
 
 	@Override
 	public boolean updateTango(Tango newData) throws ManagerException {
-		// TODO Auto-generated method stub
-		return false;
+		boolean result = false;
+		Connection con = null;
+		
+		try {
+			con = ConnectionManager.getConnection();
+			String sql = "update Tangore set hiragana=?, hanja=?, meaning=?, where row_id";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, newData.getHiragana());
+			pstmt.setString(2, newData.getHanja());
+			pstmt.setString(3, newData.getMeaning());
+			
+			pstmt.executeUpdate();
+			result = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			ConnectionManager.close(con);
+		}
+		return result;
 	}
 
 
 	@Override
 	public boolean deleteAll() throws ManagerException {
-		// TODO Auto-generated method stub
-		return false;
+		boolean result = false;
+		Connection con = null;
+		
+		try {
+			con = ConnectionManager.getConnection();
+			String sql = "delete from Tangore";
+			PreparedStatement pstmt;
+			pstmt = con.prepareStatement(sql);
+			pstmt.executeUpdate();
+			
+			result = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
 	}
 }
