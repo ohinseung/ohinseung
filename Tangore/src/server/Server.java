@@ -8,7 +8,7 @@ import java.net.Socket;
 public class Server {
 	
 	public static void main(String[] args) {
-		int port = 9900;
+		int port = 7777;
 		
 		try {
 			ServerSocket ssocket = new ServerSocket(port);

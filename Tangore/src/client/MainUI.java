@@ -5,20 +5,23 @@ package client;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class UI extends JFrame implements ActionListener{
+import vo.Tango;
+
+public class MainUI extends JFrame implements ActionListener{
 	
 	private JPanel mainPanel;
 	private JButton btn_tangoInsert;
 	private JButton btn_tangoshou;
 	private JButton btn_tangoQuiz;
 	
-	public UI() {
+	public MainUI() {
 		setTitle("탕고래");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 700);
@@ -57,19 +60,16 @@ public class UI extends JFrame implements ActionListener{
 		if(source == btn_tangoInsert) {
 			//등록버튼을 눌렀을 시 메인메뉴를 보이지 않게 하고
 			//등록 UI를 visible로 설정한다.
-			Insert_Ui insertUi = new Insert_Ui();
-			setVisible(false);
-			insertUi.setVisible(true);
+			new InsertUI();
+			dispose();
 		}
 		else if(source == btn_tangoshou) {
-			//아직 미작성
+			//검색 UI생성
+			new SearchUI();
+			dispose();
 		}
 		else if(source == btn_tangoQuiz) {
 			
 		}
-	}
-	
-	public static void main(String[] args) {
-		new UI();
 	}
 }

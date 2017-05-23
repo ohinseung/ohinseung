@@ -30,6 +30,7 @@ public class ServerThread implements Runnable {
 				
 				switch(ObjectName) {
 					case "insert":
+					System.out.println("어디까지왔나");
 					boolean result = sm.insertTango((Tango)ObjectMain);
 					noos.writeObject(result);
 					break;

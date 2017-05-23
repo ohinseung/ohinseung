@@ -1,67 +1,46 @@
 package client;
-/* 작성자 : 이승현
- * 작성일 : 2017-05-22
- * */
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 
-import javax.swing.JTextField;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
-public class Insert_Ui extends JFrame 
+import exception.ManagerException;
+import vo.Tango;
+
+public class InsertUI extends JFrame 
 {
 	private JPanel contentPane;
-	private JTextField add_Hanja;
-	private JTextField add_Hiragana;
-	private JTextField add_Meaning;
-
-	JLabel	image;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) 
-	{
-		EventQueue.invokeLater(new Runnable() 
-		{
-			public void run()
-			{
-				try 
-				{
-					Insert_Ui insert_ui_frame = new Insert_Ui();
-					insert_ui_frame.setVisible(true);
-				}
-				
-				catch (Exception e) 
-				{
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	public JTextField add_Hanja;
+	public JTextField add_Hiragana;
+	public JTextField add_Meaning;
+	public File image;
+	private ClientManager manager; // 요청과 관련된 처리를 하기 위해 생성한 ClientManager 클래스의 객체
+	protected File imageFile;
+	
 	/**
 	 * Create the frame.
 	 */
-	public Insert_Ui() 
-	{
+	public InsertUI() 
+	{	
+		image=null;
+		
+		manager = new ClientManager();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 598, 296);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setVisible(true);
 		
 //		제목 입력
 		setTitle("입력");
@@ -134,7 +113,8 @@ public class Insert_Ui extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
-				System.exit(0);
+				MainUI mu = new MainUI();
+				dispose();
 			}
 		});
 		
@@ -147,15 +127,41 @@ public class Insert_Ui extends JFrame
 				JFileChooser fc = new JFileChooser();
                 int result = fc.showOpenDialog(null);
                 if (result == JFileChooser.APPROVE_OPTION) {
-                    File file = fc.getSelectedFile();
-                    try {
-                        image.setIcon(new ImageIcon(ImageIO.read(file)));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    imageFile = fc.getSelectedFile();
+                    
                 }
+                
 			}
 		});
 		
+//		확인 버튼
+//		확인 버튼을 누르면 swing창 종료 + 추가되는 단어반환
+		
+		input_Ok.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String hiragana = add_Hiragana.getText();
+				String hanja = add_Hanja.getText();
+				String meaning = add_Meaning.getText();
+				if(hiragana.equals("")) JOptionPane.showMessageDialog(null, "아무것도 입력되지 않았습니다.");
+				else{
+					Tango tango = new Tango(hiragana, hanja, meaning, imageFile);
+					boolean insertResult = false;
+					try {
+						insertResult = manager.insertTango(tango);
+					} catch (ManagerException e1) {
+						e1.printStackTrace();
+					}
+					
+					if(insertResult){
+						JOptionPane.showMessageDialog(null, "등록을 성공 하였습니다.");
+						MainUI mu = new MainUI();
+						dispose();
+					}		
+				}
+			}
+		});		
 	}
+	
 }
