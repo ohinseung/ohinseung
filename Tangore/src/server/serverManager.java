@@ -1,10 +1,8 @@
 package server;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -94,12 +92,12 @@ public class serverManager implements Manager{
 		
 		try {
 			con = ConnectionManager.getConnection();
-			String sql = "select * from Tangore where hanja like '?%' = ?";
+			String sql = "select * from Tangore where hanja like '%?%'?";
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, hanja);
 			ResultSet rs = pstmt.executeQuery();
 			
-			if(rs.next()) {
+			while(rs.next()) {
 				int row_id = rs.getInt("row_id");
 				String hiragana = rs.getString("hiragana");
 				String meaning = rs.getString("meaning");
@@ -127,12 +125,12 @@ public class serverManager implements Manager{
 		
 		try {
 			con = ConnectionManager.getConnection();
-			String sql = "select * from Tangore where hiragana like '?%' = ?";
+			String sql = "select * from Tangore where hiragana like '?%'";
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, hiragana);
 			ResultSet rs = pstmt.executeQuery();
 			
-			if(rs.next()) {
+			while(rs.next()) {
 				int row_id = rs.getInt("row_id");
 				String hanja = rs.getString("hanja");
 				String meaning = rs.getString("meaning");
@@ -158,12 +156,12 @@ public class serverManager implements Manager{
 		
 		try {
 			con = ConnectionManager.getConnection();
-			String sql = "select * from Tangore where meanging like '?%' = ?";
+			String sql = "select * from Tangore where meanging like '?%'";
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, meaning);
 			ResultSet rs = pstmt.executeQuery();
 			
-			if(rs.next()) {
+			while(rs.next()) {
 				int row_id = rs.getInt("row_id");
 				String hanja = rs.getString("hanja");
 				String hiragana = rs.getString("hiragana");
@@ -229,16 +227,18 @@ public class serverManager implements Manager{
 	public boolean updateTango(Tango newData) throws ManagerException {
 		boolean result = false;
 		Connection con = null;
-		
+		System.out.println("들어온단어 확인 : "+ newData.getHiragana());
 		try {
 			con = ConnectionManager.getConnection();
-			String sql = "update Tangore set hiragana=?, hanja=?, meaning=?, where row_id";
+			String sql = "update Tangore set hiragana=?, hanja=?, meaning=? where row_id = ?";
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, newData.getHiragana());
 			pstmt.setString(2, newData.getHanja());
 			pstmt.setString(3, newData.getMeaning());
+			pstmt.setInt(4, newData.getRow_id());
 			
 			pstmt.executeUpdate();
+			
 			result = true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
