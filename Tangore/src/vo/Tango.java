@@ -35,9 +35,16 @@ public class Tango implements Serializable{
 		this.meaning = meaning;
 		this.image = image;
 	}
-	public Tango(String hiragana, String hanja, String meaning, File imageFile) {
+	public Tango(int row_id, String hiragana, String hanja, String meaning, File imageFile) {
 		super();
-		
+		this.row_id = row_id;
+		this.hiragana = hiragana;
+		this.hanja = hanja;
+		this.meaning = meaning;
+		this.imageFile = imageFile;
+	}
+	public Tango(String hiragana, String hanja, String meaning, File imageFile) {
+		super();		
 		this.hiragana = hiragana;
 		this.hanja = hanja;
 		this.meaning = meaning;
