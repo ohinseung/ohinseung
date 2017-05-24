@@ -9,9 +9,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.plaf.basic.BasicBorders.RadioButtonBorder;
 
 import exception.ManagerException;
 import manager.Manager;
@@ -307,5 +309,52 @@ public class serverManager implements Manager{
 			e.printStackTrace();
 		}
 		return result;
+	}
+	
+	public ArrayList<Tango> getQuizList() throws ManagerException {
+		ArrayList<Tango> list = new ArrayList<>();
+		ArrayList<Tango> quizList = new ArrayList<>();
+		Connection con = null;
+		
+		try {
+			con = ConnectionManager.getConnection();
+			String sql = "select * from Tangore";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			ResultSet rs = pstmt.executeQuery();
+			
+			
+			while(rs.next()) {
+				int row_id 		= rs.getInt("row_id");
+				String hiragana = rs.getString("hiragana");
+				String hanja 	= rs.getString("hanja");
+				String meaning 	= rs.getString("meaning");
+				// 바이너리 데이터를 저장하고 있는 컬럼으로부터 데이터를 가져온다
+				InputStream in = rs.getBinaryStream("image");
+				// BufferedImage를 생성하면 ImageIO를 통해 브라우저에 출력하기가 쉽다.
+				BufferedImage bufferedImage = ImageIO.read(in);
+				ImageIcon image = new ImageIcon(bufferedImage);
+
+				Tango tango 	= new Tango(row_id, hiragana, hanja, meaning, image);
+				list.add(tango);
+			}
+			int quizNum = 20;
+			Random r = new Random();
+			//정해준 문제수 만큼 반복
+			while (quizList.size() < quizNum){
+				//랜덤생성
+				int index = r.nextInt(list.size());
+				Tango t = list.get(index);				
+				//존재 여부 확인 후 리스트에 저장
+				if(quizList.contains(t)) continue;
+				else{
+					quizList.add(t);
+				}				
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			ConnectionManager.close(con);
+		}		
+		return quizList;
 	}
 }

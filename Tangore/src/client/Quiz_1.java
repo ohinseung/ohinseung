@@ -14,30 +14,6 @@ public class Quiz_1 extends JFrame
 	JTextField quiz_num_textField;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) 
-	{
-		EventQueue.invokeLater(new Runnable() 
-		{
-			public void run() 
-			{
-				try 
-				{
-					Quiz_1 frame = new Quiz_1();
-					frame.setVisible(true);
-					
-				} 
-				
-				catch (Exception e) 
-				{
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the frame.
 	 */
 
@@ -65,6 +41,8 @@ public class Quiz_1 extends JFrame
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		
 		
 		JLabel quiz_title_label = new JLabel("πÆ¡¶«Æ¿Ã ø…º«");
 		quiz_title_label.setFont(new Font("±º∏≤", Font.PLAIN, 25));
@@ -129,5 +107,7 @@ public class Quiz_1 extends JFrame
 		quiz_cancel_Btn.setFont(new Font("±º∏≤", Font.PLAIN, 25));
 		quiz_cancel_Btn.setBounds(253, 248, 146, 44);
 		contentPane.add(quiz_cancel_Btn);
+		
+		setVisible(true);
 	}
 }

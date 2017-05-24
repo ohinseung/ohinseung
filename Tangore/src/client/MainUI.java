@@ -69,7 +69,8 @@ public class MainUI extends JFrame implements ActionListener{
 			dispose();
 		}
 		else if(source == btn_tangoQuiz) {
-			
+			new Quiz_1();
+			dispose();
 		}
 	}
 }
