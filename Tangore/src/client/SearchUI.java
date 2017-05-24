@@ -147,15 +147,16 @@ public class SearchUI extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		//검색
 		try {
 			list = cm.getTangoList();
 		} catch (ManagerException e3) {
 			e3.printStackTrace();
 		}
+		//검색
 		if(e.getActionCommand().equals("검색")){
 			String[] selections = {"한자", "히라가나", "뜻"};
-			String selected = (String) JOptionPane.showInputDialog(null, "검색할 항목을 선택해주세요", "검색 항목 선택", JOptionPane.QUESTION_MESSAGE, null, selections, "히라가나");
+			String selected = (String) JOptionPane.showInputDialog(null, "검색할 항목을 선택해주세요", "검색 항목 선택", JOptionPane.QUESTION_MESSAGE, null, selections, "한자");
+			if(selected.equals(null))return;
 			String search = (String) JOptionPane.showInputDialog(null, "검색할 단어를 입력해주세요");
 			try {
 				switch(selected){
@@ -164,13 +165,23 @@ public class SearchUI extends JFrame implements ActionListener{
 				case "뜻" 		: list = cm.findTango_meaing(search);		break;
 				}
 				//테이블 초기화
-				defaultTableModel.setRowCount(0);
+				int tableSize = list.size();
+				if(tableSize == 1) tableSize = 2;
 				
+				defaultTableModel.setRowCount(list.size());
+				 
+				System.out.println(list.size());
 				//행 추가
-				for(Tango tango :list){
+				int row = 0;
+				for(Tango tango :list){					
 					ImageIcon image = getScaledImage(tango.getimage(), 100, 100);
-					Object [] tangoRow = { tango.getRow_id(), image ,tango.getHanja(), tango.getHiragana(),tango.getMeaning()};				
-					defaultTableModel.addRow(tangoRow);
+					tangoTable.setValueAt(tango.getRow_id(),	row, 0);
+					tangoTable.setValueAt(image,				row, 1);
+					tangoTable.setValueAt(tango.getHanja(),		row, 2);
+					tangoTable.setValueAt(tango.getHiragana(),	row, 3);
+					tangoTable.setValueAt(tango.getMeaning(),	row, 4);
+					row++;
+					System.out.println("test");
 				}			
 				defaultTableModel.fireTableDataChanged();
 			} catch (ManagerException e2) {
@@ -285,6 +296,16 @@ public class SearchUI extends JFrame implements ActionListener{
 		}else if(e.getActionCommand().equals("전체출력")){
 			try {
 				list =cm.getTangoList();
+				//테이블 초기화
+				defaultTableModel.setRowCount(0);
+				
+				//행 추가
+				for(Tango tango :list){
+					ImageIcon image = getScaledImage(tango.getimage(), 100, 100);
+					Object [] tangoRow = { tango.getRow_id(), image ,tango.getHanja(), tango.getHiragana(),tango.getMeaning()};				
+					defaultTableModel.addRow(tangoRow);
+				}			
+				defaultTableModel.fireTableDataChanged();
 			} catch (ManagerException e1) {
 				e1.printStackTrace();
 			}

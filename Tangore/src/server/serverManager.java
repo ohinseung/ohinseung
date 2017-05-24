@@ -65,16 +65,16 @@ public class serverManager implements Manager{
 			ResultSet rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				String hanja = rs.getString("hanja");
-				String hiragana = rs.getString("hiragana");
-				String meaning = rs.getString("meaning");
+				String hanja 				= rs.getString("hanja");
+				String hiragana 			= rs.getString("hiragana");
+				String meaning 				= rs.getString("meaning");
 				// 바이너리 데이터를 저장하고 있는 컬럼으로부터 데이터를 가져온다
-				InputStream in = rs.getBinaryStream("image");
+				InputStream in 				= rs.getBinaryStream("image");
 				// BufferedImage를 생성하면 ImageIO를 통해 브라우저에 출력하기가 쉽다.
 				BufferedImage bufferedImage = ImageIO.read(in);
-				ImageIcon image = new ImageIcon(bufferedImage);
+				ImageIcon image 			= new ImageIcon(bufferedImage);
 				
-				tango = new Tango(row_id, hanja, hiragana, meaning, image);						
+				tango 	= new Tango(row_id, hiragana, hanja, meaning, image);				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -92,22 +92,23 @@ public class serverManager implements Manager{
 		
 		try {
 			con = ConnectionManager.getConnection();
-			String sql = "select * from Tangore where hanja like '%?%'?";
+			String sql = "select * from Tangore where hanja like '%"+hanja+"%'";
 			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, hanja);
+			//pstmt.setString(1, hanja);
 			ResultSet rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				int row_id = rs.getInt("row_id");
-				String hiragana = rs.getString("hiragana");
-				String meaning = rs.getString("meaning");
+				int row_id 					= rs.getInt("row_id");
+				String findHanja			= rs.getString("hanja");
+				String hiragana 			= rs.getString("hiragana");
+				String meaning 				= rs.getString("meaning");
 				// 바이너리 데이터를 저장하고 있는 컬럼으로부터 데이터를 가져온다
-				InputStream in = rs.getBinaryStream("image");
+				InputStream in 			= rs.getBinaryStream("image");
 				// BufferedImage를 생성하면 ImageIO를 통해 브라우저에 출력하기가 쉽다.
 				BufferedImage bufferedImage = ImageIO.read(in);
 				ImageIcon image = new ImageIcon(bufferedImage);
-				Tango tango 	= new Tango(row_id, hanja, hiragana, meaning, image);
-				
+				Tango tango 	= new Tango(row_id, hiragana, findHanja, meaning, image);
+				list.add(tango);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -125,21 +126,23 @@ public class serverManager implements Manager{
 		
 		try {
 			con = ConnectionManager.getConnection();
-			String sql = "select * from Tangore where hiragana like '?%'";
+			String sql = "select * from Tangore where hiragana like '"+ hiragana +"%'";
 			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, hiragana);
+			//pstmt.setString(1, hiragana);
 			ResultSet rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				int row_id = rs.getInt("row_id");
-				String hanja = rs.getString("hanja");
-				String meaning = rs.getString("meaning");
+				int row_id 					= rs.getInt("row_id");
+				String findHiragana 		= rs.getString("hiragana");
+				String hanja 				= rs.getString("hanja");
+				String meaning 				= rs.getString("meaning");
 				// 바이너리 데이터를 저장하고 있는 컬럼으로부터 데이터를 가져온다
-				InputStream in = rs.getBinaryStream("image");
+				InputStream in 				= rs.getBinaryStream("image");
 				// BufferedImage를 생성하면 ImageIO를 통해 브라우저에 출력하기가 쉽다.
 				BufferedImage bufferedImage = ImageIO.read(in);
-				ImageIcon image = new ImageIcon(bufferedImage);
-				Tango tango 	= new Tango(row_id, hanja, hiragana, meaning, image);
+				ImageIcon image 			= new ImageIcon(bufferedImage);
+				Tango tango 				= new Tango(row_id, findHiragana, hanja, meaning, image);
+				list.add(tango);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -153,25 +156,26 @@ public class serverManager implements Manager{
 	public ArrayList<Tango> findTango_meaing(String meaning) throws ManagerException {
 		ArrayList<Tango> list = new ArrayList<>();
 		Connection con = null;
-		
+		System.out.println("어디까지 왔나");
 		try {
 			con = ConnectionManager.getConnection();
-			String sql = "select * from Tangore where meanging like '?%'";
+			String sql = "select * from Tangore where meanging like '"+meaning+"%'";
 			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, meaning);
+			//pstmt.setString(1, meaning);
 			ResultSet rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				int row_id = rs.getInt("row_id");
-				String hanja = rs.getString("hanja");
-				String hiragana = rs.getString("hiragana");
+				int row_id 					= rs.getInt("row_id");
+				String hanja 				= rs.getString("hanja");
+				String hiragana 			= rs.getString("hiragana");
+				String findMeaning 			= rs.getString("meaning");
 				// 바이너리 데이터를 저장하고 있는 컬럼으로부터 데이터를 가져온다
-				InputStream in = rs.getBinaryStream("image");
+				InputStream in 				= rs.getBinaryStream("image");
 				// BufferedImage를 생성하면 ImageIO를 통해 브라우저에 출력하기가 쉽다.
 				BufferedImage bufferedImage = ImageIO.read(in);
-				ImageIcon image = new ImageIcon(bufferedImage);
-				
-				Tango tango 	= new Tango(row_id, hanja, hiragana, meaning, image);
+				ImageIcon image 			= new ImageIcon(bufferedImage);				
+				Tango tango 				= new Tango(row_id, hiragana, hanja, findMeaning, image);
+				list.add(tango);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -233,7 +237,7 @@ public class serverManager implements Manager{
 			if(newData.getimageFile() != null){
 				String sql = "update Tangore set image =? where row_id = ?";
 				PreparedStatement pstmt = con.prepareStatement(sql);
-				FileInputStream fis = null;
+				FileInputStream fis 	= null;
 				try {
 					fis = new FileInputStream(newData.getimageFile());
 				} catch (FileNotFoundException e) {
