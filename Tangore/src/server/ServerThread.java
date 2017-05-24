@@ -36,7 +36,7 @@ public class ServerThread implements Runnable {
 					break;
 					
 					case "find_row_id":
-					ArrayList<Tango> tango_row_id = sm.findTango_row_id((int)ObjectMain);
+					Tango tango_row_id = sm.findTango_row_id((int)ObjectMain);
 					noos.writeObject(tango_row_id);
 					System.out.println("[System] row_id 검색 성공");
 					break;

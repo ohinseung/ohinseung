@@ -2,6 +2,7 @@ package server;
 
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -52,8 +53,8 @@ public class serverManager implements Manager{
 	
 
 	@Override
-	public ArrayList<Tango> findTango_row_id(int row_id) throws ManagerException {
-		ArrayList<Tango> list = new ArrayList<>();
+	public Tango findTango_row_id(int row_id) throws ManagerException {
+		Tango tango = null;
 		Connection con = null;
 		
 		try {
@@ -63,7 +64,7 @@ public class serverManager implements Manager{
 			pstmt.setInt(1, row_id);
 			ResultSet rs = pstmt.executeQuery();
 			
-			while(rs.next()) {
+			if(rs.next()) {
 				String hanja = rs.getString("hanja");
 				String hiragana = rs.getString("hiragana");
 				String meaning = rs.getString("meaning");
@@ -73,8 +74,7 @@ public class serverManager implements Manager{
 				BufferedImage bufferedImage = ImageIO.read(in);
 				ImageIcon image = new ImageIcon(bufferedImage);
 				
-				Tango tango = new Tango(row_id, hanja, hiragana, meaning, image);
-				list.add(tango);				
+				tango = new Tango(row_id, hanja, hiragana, meaning, image);						
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -82,7 +82,7 @@ public class serverManager implements Manager{
 			ConnectionManager.close(con);
 		}
 		
-		return list;
+		return tango;
 	}
 
 	@Override
@@ -227,19 +227,33 @@ public class serverManager implements Manager{
 	public boolean updateTango(Tango newData) throws ManagerException {
 		boolean result = false;
 		Connection con = null;
-		System.out.println("들어온단어 확인 : "+ newData.getHiragana());
+		System.out.println("들어온단어 확인 : [히라가나] "+ newData.getHiragana() + " [한자] "+ newData.getHanja() + " [뜻] " + newData.getMeaning()  );
 		try {
 			con = ConnectionManager.getConnection();
-			String sql = "update Tangore set hiragana=?, hanja=?, meaning=? where row_id = ?";
-			PreparedStatement pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, newData.getHiragana());
-			pstmt.setString(2, newData.getHanja());
-			pstmt.setString(3, newData.getMeaning());
-			pstmt.setInt(4, newData.getRow_id());
-			
-			pstmt.executeUpdate();
-			
+			if(newData.getimageFile() != null){
+				String sql = "update Tangore set image =? where row_id = ?";
+				PreparedStatement pstmt = con.prepareStatement(sql);
+				FileInputStream fis = null;
+				try {
+					fis = new FileInputStream(newData.getimageFile());
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				pstmt.setBinaryStream(1, fis);
+				pstmt.setInt(2, newData.getRow_id());
+				pstmt.executeUpdate();
+			}else{				
+				String sql = "update Tangore set hiragana=?, hanja=?, meaning=? where row_id = ?";
+				PreparedStatement pstmt = con.prepareStatement(sql);
+				
+				pstmt.setString(1, newData.getHiragana());
+				pstmt.setString(2, newData.getHanja());
+				pstmt.setString(3, newData.getMeaning());
+				pstmt.setInt(4, newData.getRow_id());
+				pstmt.executeUpdate();
+			}			
 			result = true;
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

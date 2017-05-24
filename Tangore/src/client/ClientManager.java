@@ -83,9 +83,9 @@ public class ClientManager implements Manager{
 	 *            찾고자 하는 시퀀스 넘버
 	 */
 	@Override
-	public ArrayList<Tango> findTango_row_id(int row_id) throws ManagerException {
+	public Tango findTango_row_id(int row_id) throws ManagerException {
 		Object[] msg = {"find_row_id", row_id};
-		ArrayList<Tango> findResult = (ArrayList<Tango>) sendRequest(msg);
+		Tango findResult = (Tango) sendRequest(msg);
 		return findResult;
 	}
 	

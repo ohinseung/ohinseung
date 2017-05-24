@@ -24,7 +24,7 @@ public interface Manager {
 	 *         null을 반환한다.
 	 */
 	
-	public ArrayList<Tango> findTango_row_id(int row_id) throws ManagerException;
+	public Tango findTango_row_id(int row_id) throws ManagerException;
 	/**
 	 * 등록된 Tango 객체를 row_id로 검색한다.
 	 * 
