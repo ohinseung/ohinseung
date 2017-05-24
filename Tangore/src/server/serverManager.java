@@ -17,6 +17,7 @@ import exception.ManagerException;
 import manager.Manager;
 import vo.Tango;
 
+
 public class serverManager implements Manager{
 	
 	public boolean insertTango(Tango tango) {
@@ -153,15 +154,15 @@ public class serverManager implements Manager{
 		return list;
 	}
 	@Override
-	public ArrayList<Tango> findTango_meaing(String meaning) throws ManagerException {
+	public ArrayList<Tango> findTango_meaning(String meaning) throws ManagerException {
 		ArrayList<Tango> list = new ArrayList<>();
 		Connection con = null;
-		System.out.println("어디까지 왔나");
 		try {
 			con = ConnectionManager.getConnection();
-			String sql = "select * from Tangore where meanging like '"+meaning+"%'";
+			String sql = "select * from Tangore where meaning like '"+meaning+"%'";
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			//pstmt.setString(1, meaning);
+			System.out.println("어디까지 왔나");
 			ResultSet rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -188,8 +189,28 @@ public class serverManager implements Manager{
 
 	@Override
 	public boolean deleteTango(int row_id) throws ManagerException {
+		boolean result = false;
+		Connection con = null;
 		
-		return false;
+		try {
+			// 매니저로부터 Connection 객체를 얻는다
+			con = ConnectionManager.getConnection();			
+			
+			String sql = "delete from tangore where row_id=?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, row_id);
+			pstmt.executeUpdate();
+			
+			// 결과값은 true
+			result = true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// 다 끝나면 Connection을 종료한다
+			ConnectionManager.close(con);
+		}	
+		return result;
+		
 	}
 
 	@Override

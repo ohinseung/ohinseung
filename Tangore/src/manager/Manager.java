@@ -57,7 +57,7 @@ public interface Manager {
 	 */
 	public boolean deleteTango(int row_id) throws ManagerException;
 
-	ArrayList<Tango>  findTango_meaing(String meaning) throws ManagerException;
+	ArrayList<Tango> findTango_meaning(String meaning) throws ManagerException;
 
 	
 	/**
@@ -76,6 +76,8 @@ public interface Manager {
 	public boolean updateTango(Tango newData) throws ManagerException;
 
 	public boolean deleteAll() throws ManagerException;
+
+	
 
 
 }

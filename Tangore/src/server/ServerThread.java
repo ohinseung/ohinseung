@@ -48,10 +48,16 @@ public class ServerThread implements Runnable {
 					break;
 					
 					case "find_hiragana":
-					ArrayList<Tango>  tango_hiragana = sm.findTango_hiragana((String)ObjectMain);
-					noos.writeObject(tango_hiragana);
-					System.out.println("[System] 히라가나 검색 성공");
-					break;
+						ArrayList<Tango>  tango_hiragana = sm.findTango_hiragana((String)ObjectMain);
+						noos.writeObject(tango_hiragana);
+						System.out.println("[System] 히라가나 검색 성공");
+						break;
+
+					case "find_meaning":
+						ArrayList<Tango>  tango_meaning = sm.findTango_meaning((String)ObjectMain);
+						noos.writeObject(tango_meaning);
+						System.out.println("[System] 뜻 검색 성공");
+						break;
 					
 					case "delete":
 					boolean delete = sm.deleteTango((int)ObjectMain);

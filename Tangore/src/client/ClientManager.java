@@ -68,7 +68,7 @@ public class ClientManager implements Manager{
 	 *            찾고자 하는 단어의 뜻
 	 */
 	@Override
-	public ArrayList<Tango> findTango_meaing(String meaning) throws ManagerException {
+	public ArrayList<Tango> findTango_meaning(String meaning) throws ManagerException {
 		Object[] msg = {"find_meaning", meaning};
 		ArrayList<Tango> findResult = (ArrayList<Tango>) sendRequest(msg);
 		return findResult;

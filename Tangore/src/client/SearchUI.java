@@ -5,6 +5,7 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.List;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -69,6 +71,7 @@ public class SearchUI extends JFrame implements ActionListener{
 		
 		//DefaultTableModel을 선언하고 데이터 담기
 		defaultTableModel = new DefaultTableModel(rowData, columnNames);
+		
 
 		//행 추가
 		for(Tango tango :list){
@@ -81,14 +84,20 @@ public class SearchUI extends JFrame implements ActionListener{
 		tangoTable = new JTable(defaultTableModel){
             //  사진 주소값 사진으로 바꿔서 넣기
             public Class getColumnClass(int column){
-                return getValueAt(1, column).getClass();
-            }                     
+               
+            	
+            	if (getRowCount() > 0) {
+                    return getValueAt(0, column).getClass();
+                 }
+
+                 return super.getColumnClass(column);
+              }                    
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };         
-        
+        tangoTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		//JTable 크기/ 정렬 / 폰트 / 수정 가능 여부 지정
 		tangoTable.setFont(new Font("굴림", Font.PLAIN, 32));
@@ -146,70 +155,85 @@ public class SearchUI extends JFrame implements ActionListener{
 	 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		String event = e.getActionCommand();
 		
-		try {
-			list = cm.getTangoList();
-		} catch (ManagerException e3) {
-			e3.printStackTrace();
-		}
 		//검색
-		if(e.getActionCommand().equals("검색")){
+		switch (event){
+		case "검색" :
+			//검색할 항목 선택
 			String[] selections = {"한자", "히라가나", "뜻"};
 			String selected = (String) JOptionPane.showInputDialog(null, "검색할 항목을 선택해주세요", "검색 항목 선택", JOptionPane.QUESTION_MESSAGE, null, selections, "한자");
-			if(selected.equals(null))return;
+			//취소시 진행 안함
+			if(selected==null)return;
+			
+			//검색할 단어 입력
 			String search = (String) JOptionPane.showInputDialog(null, "검색할 단어를 입력해주세요");
+			
+			//검색해온 단어 받아오기
+			list = new ArrayList<>();
 			try {
 				switch(selected){
 				case "히라가나" : list = cm.findTango_hiragana(search);		break;
 				case "한자" 	: list = cm.findTango_hanja(search); 		break;
-				case "뜻" 		: list = cm.findTango_meaing(search);		break;
+				case "뜻" 		: list = cm.findTango_meaning(search);		break;
 				}
 				//테이블 초기화
 				int tableSize = list.size();
-				if(tableSize == 1) tableSize = 2;
-				
-				defaultTableModel.setRowCount(list.size());
-				 
+				defaultTableModel.setRowCount(tableSize);
 				System.out.println(list.size());
 				//행 추가
-				int row = 0;
-				for(Tango tango :list){					
+				if(tableSize == 1) {
+					Tango tango = list.get(0);
 					ImageIcon image = getScaledImage(tango.getimage(), 100, 100);
-					tangoTable.setValueAt(tango.getRow_id(),	row, 0);
-					tangoTable.setValueAt(image,				row, 1);
-					tangoTable.setValueAt(tango.getHanja(),		row, 2);
-					tangoTable.setValueAt(tango.getHiragana(),	row, 3);
-					tangoTable.setValueAt(tango.getMeaning(),	row, 4);
-					row++;
-					System.out.println("test");
-				}			
+					defaultTableModel.setRowCount(1);
+					tangoTable.setValueAt(tango.getRow_id(),	0, 0);
+					tangoTable.setValueAt(image,				0, 1);
+					tangoTable.setValueAt(tango.getHanja(),		0, 2);
+					tangoTable.setValueAt(tango.getHiragana(),	0, 3);
+					tangoTable.setValueAt(tango.getMeaning(),	0, 4);
+				}
+				else{
+					int row = 0;
+					for(Tango tango :list){					
+						ImageIcon image = getScaledImage(tango.getimage(), 100, 100);
+						tangoTable.setValueAt(tango.getRow_id(),	row, 0);
+						tangoTable.setValueAt(image,				row, 1);
+						tangoTable.setValueAt(tango.getHanja(),		row, 2);
+						tangoTable.setValueAt(tango.getHiragana(),	row, 3);
+						tangoTable.setValueAt(tango.getMeaning(),	row, 4);
+						row++;
+					}			
+				}
 				defaultTableModel.fireTableDataChanged();
 			} catch (ManagerException e2) {
 				e2.printStackTrace();
-			}			
-		}
-		//수정
-		else if(e.getActionCommand().equals("수정")){
+			}
+			break;
+		case "수정":			
 			//업데이트해서 들어갈 단어객체
 			Tango newData = new Tango();
 			
-			//Row선택 (선택안되면 메세지확인 창)
+			//Row_id선택 (선택안되면 메세지확인 창)
 			
-			int selectedRowIndex = tangoTable.getSelectedRow();
-						
-			if(selectedRowIndex == -1) JOptionPane.showMessageDialog(null, "수정할 항목을 클릭해주세요");
-			else{
-				//선택된 열의 단어가져오기
-				System.out.println("선택된 열 : " + selectedRowIndex);
-				Tango tango = list.get(selectedRowIndex);
+			int seletedRow = tangoTable.getSelectedRow();	
+			if(seletedRow == -1) JOptionPane.showMessageDialog(null, "수정할 항목을 클릭해주세요");
+			else{								
+				int row_id = (int) tangoTable.getValueAt(seletedRow, 0);
+				System.out.println("row_id : " + row_id);
+				Tango tango = null;
+				try {
+					tango = cm.findTango_row_id(row_id);
+				} catch (ManagerException e4) {
+					e4.printStackTrace();
+				}
 				//선택 창
-				String[] selections = {"사진", "한자", "히라가나", "뜻"};
-				String selected = (String) JOptionPane.showInputDialog(null, "수정할 항목을 선택해주세요", "수정", JOptionPane.QUESTION_MESSAGE, null, selections, "사진");
-				if(selected == null) return;
+				String[] updateSelections = {"사진", "한자", "히라가나", "뜻"};
+				String updateSelected = (String) JOptionPane.showInputDialog(null, "수정할 항목을 선택해주세요", "수정", JOptionPane.QUESTION_MESSAGE, null, updateSelections, "사진");
+				if(updateSelected == null) return;
 				try {
 					
 					//사진이 선택되었다면
-					if(selected.equals("사진")){
+					if(updateSelected.equals("사진")){
 						//사진을 찾기위한 윈도우 탐색창
 						JFileChooser fc = new JFileChooser();
 				        fc.setMultiSelectionEnabled(false);
@@ -219,14 +243,14 @@ public class SearchUI extends JFrame implements ActionListener{
 				        //이미지 윈도우 탐색창확인
 				        if(Checker == JFileChooser.APPROVE_OPTION){
 				        	System.out.println("이미지 경로 찾기 중");
-				        	File imageFile = fc.getSelectedFile();
+				        	File imageFile 	= fc.getSelectedFile();
 				        	newData 		= new Tango(tango.getRow_id(), tango.getHiragana(), tango.getHanja(), tango.getMeaning(), imageFile);
-				        	updateResult = cm.updateTango(newData);	
+				        	updateResult 	= cm.updateTango(newData);	
 							if(updateResult){
 								//테이블 업데이트
 								tango = cm.findTango_row_id(newData.getRow_id());
 								ImageIcon image = getScaledImage(tango.getimage(), 100, 100);
-								tangoTable.setValueAt(image,	selectedRowIndex, 1);
+								tangoTable.setValueAt(image, seletedRow, 1);
 								defaultTableModel.fireTableDataChanged();
 								
 								//선택되어있는것 없애기
@@ -237,7 +261,7 @@ public class SearchUI extends JFrame implements ActionListener{
 				    else{
 						//수정할 히라가나/한자/뜻 입력						
 						String update = (String) JOptionPane.showInputDialog(null, "수정할 단어를 입력해주세요");
-						switch(selected){							
+						switch(updateSelected){							
 						case "히라가나" : 
 							updateResult	= cm.updateTango(newData);
 							newData 		= new Tango(tango.getRow_id(), update, tango.getHanja(), tango.getMeaning(), tango.getimage());
@@ -256,11 +280,12 @@ public class SearchUI extends JFrame implements ActionListener{
 						updateResult 	= cm.updateTango(newData);
 						if(updateResult){
 							//테이블 업데이트
-							tangoTable.setValueAt(newData.getHanja(),	selectedRowIndex, 2);
-							tangoTable.setValueAt(newData.getHiragana(),selectedRowIndex, 3);
-							tangoTable.setValueAt(newData.getMeaning(),	selectedRowIndex, 4);
+							tangoTable.setValueAt(newData.getHanja(),	seletedRow, 2);
+							tangoTable.setValueAt(newData.getHiragana(),seletedRow, 3);
+							tangoTable.setValueAt(newData.getMeaning(),	seletedRow, 4);
 							defaultTableModel.fireTableDataChanged();
 							
+							JOptionPane.showMessageDialog(null, "성공적으로 수정되었습니다.");
 							//선택되어있는것 없애기
 							tangoTable.clearSelection();
 						}
@@ -269,22 +294,29 @@ public class SearchUI extends JFrame implements ActionListener{
 					e2.printStackTrace();
 				}			
 			}
-		}else if(e.getActionCommand().equals("삭제")){
-			
-			int selectedRowIndex = tangoTable.getSelectedRow();			
-			if(selectedRowIndex == -1) JOptionPane.showMessageDialog(null, "삭제할 항목을 클릭해주세요");
+			break;
+		case "삭제": 
+			seletedRow = tangoTable.getSelectedRow();			
+			if(seletedRow == -1) JOptionPane.showMessageDialog(null, "삭제할 항목을 클릭해주세요");
 			else{
 				int answer = JOptionPane.showConfirmDialog(null, "삭제하시겠습니까?", "삭제", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null);
-				Tango deleteTango = new Tango();
-				deleteTango = list.get(selectedRowIndex);
-				if(answer == JOptionPane.OK_OPTION)
+				int row_id = (int) tangoTable.getValueAt(seletedRow, 0);
+				System.out.println("row_id : " + row_id);				
+				if(answer == JOptionPane.OK_OPTION){
 					try {
-						cm.deleteTango(deleteTango.getRow_id());
+						boolean deleteResult = cm.deleteTango(row_id);
+						if(deleteResult){
+							defaultTableModel.removeRow(seletedRow);
+							defaultTableModel.fireTableDataChanged();
+							JOptionPane.showMessageDialog(null, "성공적으로 삭제되었습니다.");
+						}
 					} catch (ManagerException e1) {
 						e1.printStackTrace();
 					}
-			}			
-		}else if(e.getActionCommand().equals("전체삭제")){
+				}			
+			}
+			break;
+		case "전체삭제":
 			int answer = JOptionPane.showConfirmDialog(null, "전체 삭제하시겠습니까?", "전체삭제", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null);
 			if(answer == JOptionPane.OK_OPTION) {
 				cm.deleteAll();
@@ -292,31 +324,29 @@ public class SearchUI extends JFrame implements ActionListener{
 				defaultTableModel.setRowCount(0);
 				defaultTableModel.fireTableDataChanged();
 			}
-			
-		}else if(e.getActionCommand().equals("전체출력")){
+			break;
+		case "전체출력":
 			try {
 				list =cm.getTangoList();
 				//테이블 초기화
 				defaultTableModel.setRowCount(0);
 				
 				//행 추가
-				for(Tango tango :list){
-					ImageIcon image = getScaledImage(tango.getimage(), 100, 100);
-					Object [] tangoRow = { tango.getRow_id(), image ,tango.getHanja(), tango.getHiragana(),tango.getMeaning()};				
+				for(Tango t :list){
+					ImageIcon image 	= getScaledImage(t.getimage(), 100, 100);
+					Object [] tangoRow 	= { t.getRow_id(), image ,t.getHanja(), t.getHiragana(),t.getMeaning()};				
 					defaultTableModel.addRow(tangoRow);
 				}			
 				defaultTableModel.fireTableDataChanged();
 			} catch (ManagerException e1) {
 				e1.printStackTrace();
 			}
-		}		
-		else if(e.getActionCommand().equals("돌아가기")){
+			break;
+		case "돌아가기":
 			new MainUI();			
 			dispose();
+			break;
 		}
-		defaultTableModel.fireTableDataChanged();
-		
 	}
-	
 }
 
