@@ -5,14 +5,13 @@
 package client;
 
 import java.awt.*;
-import java.awt.EventQueue;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 public class Quiz_1 extends JFrame
 {
 	private JPanel contentPane;
-	JTextField quiz_num_textField = null;
+	JTextField quiz_num_textField;
 
 	/**
 	 * Launch the application.
@@ -41,6 +40,22 @@ public class Quiz_1 extends JFrame
 	/**
 	 * Create the frame.
 	 */
+
+	public boolean checkinput(String quiz_num_textField)
+	{
+		boolean result=false;
+		char charinput;
+		for(int i=0;i<quiz_num_textField.length();i++)
+		{
+			charinput=quiz_num_textField.charAt(i);
+			
+			if(charinput>=0x30 && charinput<=0x39)
+			{
+				result= true;
+			}
+		}
+		return result;
+	}
 	public Quiz_1() 
 	{
 		setTitle("¹®Á¦Ç®ÀÌ");
@@ -65,7 +80,6 @@ public class Quiz_1 extends JFrame
 		quiz_num_textField.setFont(new Font("±¼¸²", Font.PLAIN, 20));
 		quiz_num_textField.setBounds(174, 77, 195, 36);
 		contentPane.add(quiz_num_textField);
-		quiz_num_textField.setColumns(10);
 		
 		JLabel player_label = new JLabel("ÀÎ       ¿ø : ");
 		player_label.setFont(new Font("±¼¸²", Font.PLAIN, 25));
