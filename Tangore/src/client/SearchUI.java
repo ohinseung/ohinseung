@@ -10,7 +10,10 @@ import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -244,8 +247,24 @@ public class SearchUI extends JFrame implements ActionListener{
 				        if(Checker == JFileChooser.APPROVE_OPTION){
 				        	System.out.println("이미지 경로 찾기 중");
 				        	File imageFile 	= fc.getSelectedFile();
-				        	newData 		= new Tango(tango.getRow_id(), tango.getHiragana(), tango.getHanja(), tango.getMeaning(), imageFile);
-				        	updateResult 	= cm.updateTango(newData);	
+							
+							byte[] by = new byte[(int)imageFile.length()];
+							int len = 0;					
+							try {
+								//이미지 파일 전송을 위해 byte[]로 변환
+								FileInputStream in = new FileInputStream(imageFile);
+								ByteArrayOutputStream bout = new ByteArrayOutputStream();
+								while( (len=in.read(by)) != -1)	bout.write(by, 0, len);
+								// byte[] 로 변환 
+								byte[] imagebuf = bout.toByteArray();
+								newData 		= new Tango(tango.getRow_id(), tango.getHiragana(), tango.getHanja(), tango.getMeaning(), imagebuf);
+								updateResult 	= cm.updateTango(newData);	
+								bout.close();
+								in.close();					
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 							if(updateResult){
 								//테이블 업데이트
 								tango = cm.findTango_row_id(newData.getRow_id());

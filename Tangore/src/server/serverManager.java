@@ -1,9 +1,11 @@
 package server;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +15,6 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.plaf.basic.BasicBorders.RadioButtonBorder;
 
 import exception.ManagerException;
 import manager.Manager;
@@ -30,7 +31,6 @@ public class serverManager implements Manager{
 		try {
 			String sql = "insert into Tangore values (SEQ_TANGORE.nextval, ?, ?, ?, ?)";
 			PreparedStatement pstmt = con.prepareStatement(sql);
-			System.out.println(tango.getHanja().toString()+tango.getHiragana().toString()+tango.getMeaning().toString()+tango.getimageFile().toString());
 			
 			//히라가나
 			pstmt.setString(1, tango.getHiragana());
@@ -39,8 +39,8 @@ public class serverManager implements Manager{
 			//뜻
 			pstmt.setString(3, tango.getMeaning());
 			//사진
-			FileInputStream fis = new FileInputStream(tango.getimageFile());
-			pstmt.setBinaryStream(4, fis);
+			ByteArrayInputStream bais = new ByteArrayInputStream(tango.getimagebuf());
+			pstmt.setBinaryStream(4, bais);
 			
 			pstmt.executeUpdate();
 			result = true;
@@ -68,14 +68,13 @@ public class serverManager implements Manager{
 			ResultSet rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				String hanja 				= rs.getString("hanja");
-				String hiragana 			= rs.getString("hiragana");
-				String meaning 				= rs.getString("meaning");
+				String hanja 	= rs.getString("hanja");
+				String hiragana = rs.getString("hiragana");
+				String meaning 	= rs.getString("meaning");
 				// 바이너리 데이터를 저장하고 있는 컬럼으로부터 데이터를 가져온다
-				InputStream in 				= rs.getBinaryStream("image");
-				// BufferedImage를 생성하면 ImageIO를 통해 브라우저에 출력하기가 쉽다.
-				BufferedImage bufferedImage = ImageIO.read(in);
-				ImageIcon image 			= new ImageIcon(bufferedImage);
+				Blob blob 		= (Blob) rs.getBinaryStream("image");
+				// Store image to the table cell
+				ImageIcon image = new ImageIcon(blob.getBytes(1, (int)blob.length()));
 				
 				tango 	= new Tango(row_id, hiragana, hanja, meaning, image);				
 			}
@@ -257,16 +256,12 @@ public class serverManager implements Manager{
 		System.out.println("들어온단어 확인 : [히라가나] "+ newData.getHiragana() + " [한자] "+ newData.getHanja() + " [뜻] " + newData.getMeaning()  );
 		try {
 			con = ConnectionManager.getConnection();
-			if(newData.getimageFile() != null){
+			if(newData.getimagebuf() != null){
 				String sql = "update Tangore set image =? where row_id = ?";
-				PreparedStatement pstmt = con.prepareStatement(sql);
-				FileInputStream fis 	= null;
-				try {
-					fis = new FileInputStream(newData.getimageFile());
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
-				pstmt.setBinaryStream(1, fis);
+				PreparedStatement pstmt 	= con.prepareStatement(sql);
+				ByteArrayInputStream bais 	= null;
+				bais = new ByteArrayInputStream(newData.getimagebuf());
+				pstmt.setBinaryStream(1, bais);
 				pstmt.setInt(2, newData.getRow_id());
 				pstmt.executeUpdate();
 			}else{				

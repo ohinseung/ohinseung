@@ -2,7 +2,10 @@ package client;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -145,13 +148,24 @@ public class InsertUI extends JFrame
 				String hanja = add_Hanja.getText();
 				String meaning = add_Meaning.getText();
 				if(hiragana.equals("")) JOptionPane.showMessageDialog(null, "아무것도 입력되지 않았습니다.");
-				else{
-					Tango tango = new Tango(hiragana, hanja, meaning, imageFile);
+				else{					
 					boolean insertResult = false;
 					try {
+						//이미지 파일 전송을 위해 byte[]로 변환
+						FileInputStream in = new FileInputStream(imageFile);
+						ByteArrayOutputStream bout = new ByteArrayOutputStream();
+						
+						byte[] by = new byte[(int)imageFile.length()];
+						int len = 0;					
+						while( (len=in.read(by)) != -1)	bout.write(by, 0, len);
+						// byte[] 로 변환 
+						byte[] imgbuf = bout.toByteArray();
+						Tango tango = new Tango(hiragana, hanja, meaning, imgbuf);
 						insertResult = manager.insertTango(tango);
-					} catch (ManagerException e1) {
-						e1.printStackTrace();
+						bout.close();
+						in.close();						
+					} catch (IOException | ManagerException e2) {
+						e2.printStackTrace();
 					}
 					
 					if(insertResult){
