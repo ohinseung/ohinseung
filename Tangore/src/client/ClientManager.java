@@ -1,5 +1,9 @@
 package client;
 
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -7,6 +11,9 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 import exception.ManagerException;
 import manager.Manager;
@@ -148,6 +155,11 @@ public class ClientManager implements Manager{
 		return deleteResult;
 	}	
 	
+	public ArrayList<Tango> getQuizList(int quizNum) {
+		Object[] msg = {"getQuizList", quizNum};
+		ArrayList<Tango> quizList = (ArrayList<Tango>) sendRequest(msg);
+		return quizList;
+	}
 
 	/**
 	 * 서버로 요청을 보낸다
@@ -207,6 +219,24 @@ public class ClientManager implements Manager{
 				e.printStackTrace();
 			}
 		}
+	}
+	//사진 크기 설정 메소드
+	public ImageIcon getScaledImage(byte[] imagebuf, int w, int h) {		
+	    BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+	    Graphics2D g2 = resizedImg.createGraphics();
+	    g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+	    InputStream in = new ByteArrayInputStream(imagebuf); 
+	    BufferedImage bufferedImage = null;		
+		try {
+			bufferedImage = ImageIO.read(in);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		ImageIcon image = new ImageIcon(bufferedImage);
+		g2.drawImage(image.getImage(), 0, 0, w, h, null);
+		g2.dispose();		
+	    ImageIcon resizedImageIcon = new ImageIcon(resizedImg);
+	    return resizedImageIcon;
 	}
 
 }

@@ -5,14 +5,10 @@ package client;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-import vo.Tango;
 
 public class MainUI extends JFrame implements ActionListener{
 	
@@ -32,19 +28,19 @@ public class MainUI extends JFrame implements ActionListener{
 		
 		//후속 UI와 글꼴 통일
 		btn_tangoInsert = new JButton("단어 입력");
-		btn_tangoInsert.setFont(new Font("굴림", Font.PLAIN, 32));
+		btn_tangoInsert.setFont(new Font("a옛날사진관3", Font.PLAIN, 32));
 		btn_tangoInsert.setBounds(145, 100, 300, 90);
 		btn_tangoInsert.addActionListener(this);
 		mainPanel.add(btn_tangoInsert);
 		
 		btn_tangoshou = new JButton("단어장");
-		btn_tangoshou.setFont(new Font("굴림", Font.PLAIN, 32));
+		btn_tangoshou.setFont(new Font("a옛날사진관3", Font.PLAIN, 32));
 		btn_tangoshou.setBounds(145, 270, 300, 90);
 		btn_tangoshou.addActionListener(this);
 		mainPanel.add(btn_tangoshou);
 		
 		btn_tangoQuiz = new JButton("단어 퀴즈");
-		btn_tangoQuiz.setFont(new Font("굴림", Font.PLAIN, 32));
+		btn_tangoQuiz.setFont(new Font("a옛날사진관3", Font.PLAIN, 32));
 		btn_tangoQuiz.setBounds(145, 440, 300, 90);
 		btn_tangoQuiz.addActionListener(this);
 		mainPanel.add(btn_tangoQuiz);

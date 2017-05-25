@@ -2,10 +2,9 @@ package server;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+import javax.rmi.CORBA.Util;
 import javax.swing.ImageIcon;
 
 import exception.ManagerException;
@@ -40,8 +40,7 @@ public class serverManager implements Manager{
 			pstmt.setString(3, tango.getMeaning());
 			//사진
 			ByteArrayInputStream bais = new ByteArrayInputStream(tango.getimagebuf());
-			pstmt.setBinaryStream(4, bais);
-			
+			pstmt.setBinaryStream(4, bais);			
 			pstmt.executeUpdate();
 			result = true;
 			
@@ -72,11 +71,9 @@ public class serverManager implements Manager{
 				String hiragana = rs.getString("hiragana");
 				String meaning 	= rs.getString("meaning");
 				// 바이너리 데이터를 저장하고 있는 컬럼으로부터 데이터를 가져온다
-				Blob blob 		= (Blob) rs.getBinaryStream("image");
-				// Store image to the table cell
-				ImageIcon image = new ImageIcon(blob.getBytes(1, (int)blob.length()));
-				
-				tango 	= new Tango(row_id, hiragana, hanja, meaning, image);				
+				InputStream in = rs.getBinaryStream("image");
+				byte[] imagebuf = toByteArray(in);
+				tango = new Tango(row_id, hiragana, hanja, meaning, imagebuf);				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -96,7 +93,6 @@ public class serverManager implements Manager{
 			con = ConnectionManager.getConnection();
 			String sql = "select * from Tangore where hanja like '%"+hanja+"%'";
 			PreparedStatement pstmt = con.prepareStatement(sql);
-			//pstmt.setString(1, hanja);
 			ResultSet rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -105,11 +101,9 @@ public class serverManager implements Manager{
 				String hiragana 			= rs.getString("hiragana");
 				String meaning 				= rs.getString("meaning");
 				// 바이너리 데이터를 저장하고 있는 컬럼으로부터 데이터를 가져온다
-				InputStream in 			= rs.getBinaryStream("image");
-				// BufferedImage를 생성하면 ImageIO를 통해 브라우저에 출력하기가 쉽다.
-				BufferedImage bufferedImage = ImageIO.read(in);
-				ImageIcon image = new ImageIcon(bufferedImage);
-				Tango tango 	= new Tango(row_id, hiragana, findHanja, meaning, image);
+				InputStream in = rs.getBinaryStream("image");
+				byte[] imagebuf = toByteArray(in);
+				Tango tango = new Tango(row_id, hiragana, findHanja, meaning, imagebuf);				
 				list.add(tango);
 			}
 		} catch (Exception e) {
@@ -139,11 +133,9 @@ public class serverManager implements Manager{
 				String hanja 				= rs.getString("hanja");
 				String meaning 				= rs.getString("meaning");
 				// 바이너리 데이터를 저장하고 있는 컬럼으로부터 데이터를 가져온다
-				InputStream in 				= rs.getBinaryStream("image");
-				// BufferedImage를 생성하면 ImageIO를 통해 브라우저에 출력하기가 쉽다.
-				BufferedImage bufferedImage = ImageIO.read(in);
-				ImageIcon image 			= new ImageIcon(bufferedImage);
-				Tango tango 				= new Tango(row_id, findHiragana, hanja, meaning, image);
+				InputStream in = rs.getBinaryStream("image");
+				byte[] imagebuf = toByteArray(in);
+				Tango tango = new Tango(row_id, findHiragana, hanja, meaning, imagebuf);				
 				list.add(tango);
 			}
 		} catch (Exception e) {
@@ -167,16 +159,14 @@ public class serverManager implements Manager{
 			ResultSet rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				int row_id 					= rs.getInt("row_id");
-				String hanja 				= rs.getString("hanja");
-				String hiragana 			= rs.getString("hiragana");
-				String findMeaning 			= rs.getString("meaning");
+				int row_id 			= rs.getInt("row_id");
+				String hanja 		= rs.getString("hanja");
+				String hiragana 	= rs.getString("hiragana");
+				String findMeaning 	= rs.getString("meaning");
 				// 바이너리 데이터를 저장하고 있는 컬럼으로부터 데이터를 가져온다
-				InputStream in 				= rs.getBinaryStream("image");
-				// BufferedImage를 생성하면 ImageIO를 통해 브라우저에 출력하기가 쉽다.
-				BufferedImage bufferedImage = ImageIO.read(in);
-				ImageIcon image 			= new ImageIcon(bufferedImage);				
-				Tango tango 				= new Tango(row_id, hiragana, hanja, findMeaning, image);
+				InputStream in 		= rs.getBinaryStream("image");
+				byte[] imagebuf		= toByteArray(in);
+				Tango tango			= new Tango(row_id, hiragana, hanja, findMeaning, imagebuf);				
 				list.add(tango);
 			}
 		} catch (Exception e) {
@@ -232,12 +222,9 @@ public class serverManager implements Manager{
 				String hanja 	= rs.getString("hanja");
 				String meaning 	= rs.getString("meaning");
 				// 바이너리 데이터를 저장하고 있는 컬럼으로부터 데이터를 가져온다
-				InputStream in = rs.getBinaryStream("image");
-				// BufferedImage를 생성하면 ImageIO를 통해 브라우저에 출력하기가 쉽다.
-				BufferedImage bufferedImage = ImageIO.read(in);
-				ImageIcon image = new ImageIcon(bufferedImage);
-
-				Tango tango 	= new Tango(row_id, hiragana, hanja, meaning, image);
+				InputStream in 	= rs.getBinaryStream("image");
+				byte[] imagebuf = toByteArray(in);
+				Tango tango 	= new Tango(row_id, hiragana, hanja, meaning, imagebuf);				
 				list.add(tango);
 			}
 		} catch (Exception e) {
@@ -277,7 +264,6 @@ public class serverManager implements Manager{
 			result = true;
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			ConnectionManager.close(con);
@@ -306,7 +292,7 @@ public class serverManager implements Manager{
 		return result;
 	}
 	
-	public ArrayList<Tango> getQuizList() throws ManagerException {
+	public ArrayList<Tango> getQuizList(int quizNum) throws ManagerException {
 		ArrayList<Tango> list = new ArrayList<>();
 		ArrayList<Tango> quizList = new ArrayList<>();
 		Connection con = null;
@@ -325,14 +311,11 @@ public class serverManager implements Manager{
 				String meaning 	= rs.getString("meaning");
 				// 바이너리 데이터를 저장하고 있는 컬럼으로부터 데이터를 가져온다
 				InputStream in = rs.getBinaryStream("image");
-				// BufferedImage를 생성하면 ImageIO를 통해 브라우저에 출력하기가 쉽다.
-				BufferedImage bufferedImage = ImageIO.read(in);
-				ImageIcon image = new ImageIcon(bufferedImage);
-
-				Tango tango 	= new Tango(row_id, hiragana, hanja, meaning, image);
+				byte[] imagebuf = toByteArray(in);
+				Tango tango = new Tango(row_id, hiragana, hanja, meaning, imagebuf);				
 				list.add(tango);
 			}
-			int quizNum = 20;
+			
 			Random r = new Random();
 			//정해준 문제수 만큼 반복
 			while (quizList.size() < quizNum){
@@ -351,5 +334,18 @@ public class serverManager implements Manager{
 			ConnectionManager.close(con);
 		}		
 		return quizList;
+	}
+	
+	public byte[] toByteArray(InputStream inputStream) throws IOException {
+	    ByteArrayOutputStream bout = new ByteArrayOutputStream();
+	    byte [] buffer = new byte[1024];
+	    while(true) {
+	        int len = inputStream.read(buffer);
+	        if(len < 0) {
+	            break;
+	        }
+	        bout.write(buffer, 0, len);
+	    }
+	    return bout.toByteArray();
 	}
 }

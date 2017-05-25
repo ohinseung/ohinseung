@@ -10,31 +10,11 @@ public class Tango implements Serializable {
 	private String hiragana;
 	private String hanja;
 	private String meaning;
-	private ImageIcon image;
 	private byte[] imagebuf;
 
 	public Tango() {
 		super();
 	}
-
-	public Tango(int row_id, String hiragana, String hanja, String meaning, ImageIcon image) {
-		super();
-		this.row_id = row_id;
-		this.hiragana = hiragana;
-		this.hanja = hanja;
-		this.meaning = meaning;
-		this.image = image;
-	}
-
-	public Tango(String hiragana, String hanja, String meaning, ImageIcon image) {
-		super();
-
-		this.hiragana = hiragana;
-		this.hanja = hanja;
-		this.meaning = meaning;
-		this.image = image;
-	}
-
 	public Tango(int row_id, String hiragana, String hanja, String meaning, byte[] imagebuf) {
 		super();
 		this.row_id = row_id;
@@ -82,14 +62,6 @@ public class Tango implements Serializable {
 
 	public void setMeaning(String meaning) {
 		this.meaning = meaning;
-	}
-
-	public ImageIcon getimage() {
-		return image;
-	}
-
-	public void setImage(ImageIcon image) {
-		this.image = image;
 	}
 
 	public byte[] getimagebuf() {

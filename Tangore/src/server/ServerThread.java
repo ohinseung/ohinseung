@@ -30,22 +30,22 @@ public class ServerThread implements Runnable {
 				
 				switch(ObjectName) {
 					case "insert":
-					boolean result = sm.insertTango((Tango)ObjectMain);
-					noos.writeObject(result);
-					System.out.println("[System] 등록성공");
-					break;
+						boolean result = sm.insertTango((Tango)ObjectMain);
+						noos.writeObject(result);
+						System.out.println("[System] 등록성공");
+						break;
 					
 					case "find_row_id":
-					Tango tango_row_id = sm.findTango_row_id((int)ObjectMain);
-					noos.writeObject(tango_row_id);
-					System.out.println("[System] row_id 검색 성공");
-					break;
+						Tango tango_row_id = sm.findTango_row_id((int)ObjectMain);
+						noos.writeObject(tango_row_id);
+						System.out.println("[System] row_id 검색 성공");
+						break;
 					
 					case "find_hanja":
-					ArrayList<Tango>  tango_hanja = sm.findTango_hanja((String)ObjectMain);
-					noos.writeObject(tango_hanja);
-					System.out.println("[System] 한자 검색 성공");
-					break;
+						ArrayList<Tango>  tango_hanja = sm.findTango_hanja((String)ObjectMain);
+						noos.writeObject(tango_hanja);
+						System.out.println("[System] 한자 검색 성공");
+						break;
 					
 					case "find_hiragana":
 						ArrayList<Tango>  tango_hiragana = sm.findTango_hiragana((String)ObjectMain);
@@ -60,26 +60,33 @@ public class ServerThread implements Runnable {
 						break;
 					
 					case "delete":
-					boolean delete = sm.deleteTango((int)ObjectMain);
-					noos.writeObject(delete);
-					System.out.println("[System] 삭제 성공");
-					break;
+						boolean delete = sm.deleteTango((int)ObjectMain);
+						noos.writeObject(delete);
+						System.out.println("[System] 삭제 성공");
+						break;
 					
 					case "getList":
-					ArrayList<Tango> list = sm.getTangoList();
-					noos.writeObject(list);
-					System.out.println("[System] 전체 리스트 호출 성공");
-					break;
+						ArrayList<Tango> list = sm.getTangoList();
+						noos.writeObject(list);
+						System.out.println("[System] 전체 리스트 호출 성공");
+						break;
 					
 					case "update":
-					noos.writeObject(sm.updateTango((Tango)ObjectMain));
-					System.out.println("[System] 수정 성공");
+						noos.writeObject(sm.updateTango((Tango)ObjectMain));
+						System.out.println("[System] 수정 성공");
+						break;
+					
+					case "getQuizList":
+						ArrayList<Tango> quizList = sm.getQuizList((int)ObjectMain);
+						noos.writeObject(quizList);;
+						System.out.println("[System] 퀴즈 리스트 호출 성공");
 					break;
 					
 					case "deleteAll":
-					boolean deleteAll = sm.deleteAll();
-					noos.writeObject(deleteAll);
-					break;
+						boolean deleteAll = sm.deleteAll();
+						noos.writeObject(deleteAll);
+						System.out.println("[System] 전체 삭제 성공");
+						break;
 				}
 			} catch (IOException e) {
 				exit = true;
