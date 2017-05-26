@@ -1,6 +1,5 @@
 package server;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -11,10 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
-
-import javax.imageio.ImageIO;
-import javax.rmi.CORBA.Util;
-import javax.swing.ImageIcon;
 
 import exception.ManagerException;
 import manager.Manager;
