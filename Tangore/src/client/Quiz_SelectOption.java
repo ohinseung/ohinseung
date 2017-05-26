@@ -28,15 +28,15 @@ import vo.Tango;
 
 public class Quiz_SelectOption extends JFrame
 {
-	private JPanel	contentPane;
-	JTextField		quiz_num_textField;
-	private int 	count;
-	ClientManager 	cm = new ClientManager();
-	ArrayList<Tango> quiz_alist = new ArrayList<>();
+	private JPanel		contentPane;
+	JTextField			quiz_num_textField;
+	private int			count;
+	ClientManager		cm			= new ClientManager();
+	ArrayList<Tango>	quiz_alist	= new ArrayList<>();
+
 	/**
 	 * Create the frame.
 	 */
-
 
 	public Quiz_SelectOption()
 	{
@@ -115,56 +115,79 @@ public class Quiz_SelectOption extends JFrame
 		quiz_cancel_Btn.setFont(new Font("a옛날사진관3", Font.PLAIN, 25));
 		quiz_cancel_Btn.setBounds(253, 248, 146, 44);
 		contentPane.add(quiz_cancel_Btn);
-		
-		quiz_ok_Btn.addActionListener(new ActionListener() {
-			
+
+		quiz_ok_Btn.addActionListener(new ActionListener()
+		{
+
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				//라디오 버튼 선택에 따라 다음 메뉴를 분리해서 불러온다.
-				if(e.getSource() == player_1_btn) new ClientQuizUI();
-				else if(e.getSource() == player_2_btn) new Quiz_Input_IP();
-				
+			public void actionPerformed(ActionEvent e)
+			{
+				// 라디오 버튼 선택에 따라 다음 메뉴를 분리해서 불러온다.
+				if (e.getSource() == player_1_btn)
+					new ClientQuizUI();
+				else if (e.getSource() == player_2_btn)
+					new Quiz_Input_IP();
+
 				int testCase = 0;
 				int caseCount = 0;
-				
-				//체크박스 경우의 수에 따라 case를 분류한다.
-				if(e.getSource() == hanja_ckbox) caseCount += 1;
-				if(e.getSource() == hiragana_ckbox) caseCount += 10;
-				if(e.getSource() == meaning_ckbox) caseCount += 100;
-				
-				switch(caseCount) {
-				case 1: 
+
+				// 체크박스 경우의 수에 따라 case를 분류한다.
+				if (e.getSource() == hanja_ckbox)
+					caseCount += 1;
+				if (e.getSource() == hiragana_ckbox)
+					caseCount += 10;
+				if (e.getSource() == meaning_ckbox)
+					caseCount += 100;
+
+				switch (caseCount)
+				{
+				case 1:
+					// 한자만 선택 시
 					testCase = 1;
 					break;
+
 				case 10:
+					// 히라가나만 선택 시
 					testCase = 5;
 					break;
+
 				case 100:
+					// 뜻 만 선택 시
 					testCase = 9;
 					break;
+
 				case 11:
+					// 한자와 히라가나 선택 시
 					testCase = 2;
 					break;
+
 				case 101:
+					// 뜻 과 한자 선택 시
 					testCase = 6;
 					break;
+
 				case 110:
+					// 히라가나와 뜻 선택 시
 					testCase = 10;
 					break;
+
 				case 111:
+					// 히라가나와 한자와 뜻을 선택 시
 					testCase = 3;
 					break;
 				}
-				
-				try {
+
+				try
+				{
 					new ClientQuizUI(quiz_alist, testCase);
-				} catch (ManagerException e1) {
+				} catch (ManagerException e1)
+				{
 					e1.printStackTrace();
 				}
 				dispose();
 			}
 		});
-		
+
 		quiz_cancel_Btn.addActionListener(new ActionListener()
 		{
 			@Override
@@ -176,76 +199,106 @@ public class Quiz_SelectOption extends JFrame
 		});
 
 		setVisible(true);
-		quiz_num_textField.addMouseListener(new MouseListener() {
+		quiz_num_textField.addMouseListener(new MouseListener()
+		{
 
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent e)
+			{
 				// TODO Auto-generated method stub
 				quiz_num_textField.setText("");
 				quiz_num_textField.setForeground(Color.BLACK);
 			}
+
 			@Override
-			public void mouseEntered(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e)
+			{
+			}
+
 			@Override
-			public void mouseExited(MouseEvent e) {}
+			public void mouseExited(MouseEvent e)
+			{
+			}
+
 			@Override
-			public void mousePressed(MouseEvent e) {}
+			public void mousePressed(MouseEvent e)
+			{
+			}
+
 			@Override
-			public void mouseReleased(MouseEvent e) {}
+			public void mouseReleased(MouseEvent e)
+			{
+			}
 		});
-		
-		
-		quiz_num_textField.addActionListener(new ActionListener() {
-			
+
+		quiz_num_textField.addActionListener(new ActionListener()
+		{
+
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				if(quiz_num_textField.getText().equals(null)) {
+			public void actionPerformed(ActionEvent e)
+			{
+
+				if (quiz_num_textField.getText().equals(null))
+				{
 					JOptionPane.showConfirmDialog(null, "값을 입력해주세요");
 				}
 				int quiz_list = Integer.parseInt(quiz_num_textField.getText());
-				try {
-					if(quiz_list <= 0) JOptionPane.showConfirmDialog(null, "문제 갯수는 1 이상이어야 합니다.");
-					else if(quiz_list > count) JOptionPane.showConfirmDialog(null, "문제의 최대수를 초과합니다.");
-					else quiz_alist = cm.getQuizList(quiz_list);
-				} catch (Exception e2) {
+				try
+				{
+					if (quiz_list <= 0)
+						JOptionPane.showConfirmDialog(null, "문제 갯수는 1 이상이어야 합니다.");
+					else if (quiz_list > count)
+						JOptionPane.showConfirmDialog(null, "문제의 최대수를 초과합니다.");
+					else
+						quiz_alist = cm.getQuizList(quiz_list);
+				} catch (Exception e2)
+				{
 					JOptionPane.showConfirmDialog(null, "숫자를 입력해주세요.");
 				}
-				
-				
+
 			}
 		});
-		
-		player_1_btn.addActionListener(new ActionListener() {
+
+		player_1_btn.addActionListener(new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 			}
 		});
-		
-		player_2_btn.addActionListener(new ActionListener() {
-			
+
+		player_2_btn.addActionListener(new ActionListener()
+		{
+
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 			}
 		});
-		
-		hanja_ckbox.addActionListener(new ActionListener() {
+
+		hanja_ckbox.addActionListener(new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 			}
 		});
-		
-		hiragana_ckbox.addActionListener(new ActionListener() {
+
+		hiragana_ckbox.addActionListener(new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 			}
 		});
-		
-		meaning_ckbox.addActionListener(new ActionListener() {
+
+		meaning_ckbox.addActionListener(new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 			}
 		});
 	}
-	
+
 }
