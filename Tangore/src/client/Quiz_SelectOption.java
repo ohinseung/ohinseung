@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -22,12 +23,16 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import exception.ManagerException;
+import vo.Tango;
+
 public class Quiz_SelectOption extends JFrame
 {
 	private JPanel	contentPane;
 	JTextField		quiz_num_textField;
 	private int 	count;
 	ClientManager 	cm = new ClientManager();
+	ArrayList<Tango> quiz_alist = new ArrayList<>();
 	/**
 	 * Create the frame.
 	 */
@@ -115,12 +120,48 @@ public class Quiz_SelectOption extends JFrame
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				dispose();
-				
 				//라디오 버튼 선택에 따라 다음 메뉴를 분리해서 불러온다.
 				if(e.getSource() == player_1_btn) new ClientQuizUI();
 				else if(e.getSource() == player_2_btn) new Quiz_Input_IP();
-			
+				
+				int testCase = 0;
+				int caseCount = 0;
+				
+				//체크박스 경우의 수에 따라 case를 분류한다.
+				if(e.getSource() == hanja_ckbox) caseCount += 1;
+				if(e.getSource() == hiragana_ckbox) caseCount += 10;
+				if(e.getSource() == meaning_ckbox) caseCount += 100;
+				
+				switch(caseCount) {
+				case 1: 
+					testCase = 1;
+					break;
+				case 10:
+					testCase = 5;
+					break;
+				case 100:
+					testCase = 9;
+					break;
+				case 11:
+					testCase = 2;
+					break;
+				case 101:
+					testCase = 6;
+					break;
+				case 110:
+					testCase = 10;
+					break;
+				case 111:
+					testCase = 3;
+					break;
+				}
+				
+				try {
+					new ClientQuizUI(quiz_alist, testCase);
+				} catch (ManagerException e1) {
+					e1.printStackTrace();
+				}
+				dispose();
 			}
 		});
 		
@@ -166,10 +207,12 @@ public class Quiz_SelectOption extends JFrame
 				try {
 					if(quiz_list <= 0) JOptionPane.showConfirmDialog(null, "문제 갯수는 1 이상이어야 합니다.");
 					else if(quiz_list > count) JOptionPane.showConfirmDialog(null, "문제의 최대수를 초과합니다.");
-					else cm.getQuizList(quiz_list);
+					else quiz_alist = cm.getQuizList(quiz_list);
 				} catch (Exception e2) {
 					JOptionPane.showConfirmDialog(null, "숫자를 입력해주세요.");
 				}
+				
+				
 			}
 		});
 		
@@ -186,7 +229,23 @@ public class Quiz_SelectOption extends JFrame
 			}
 		});
 		
+		hanja_ckbox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		
+		hiragana_ckbox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
+		meaning_ckbox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 	}
 	
 }
