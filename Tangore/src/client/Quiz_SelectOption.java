@@ -4,6 +4,7 @@
  * */
 package client;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -22,26 +24,12 @@ public class Quiz_SelectOption extends JFrame
 {
 	private JPanel	contentPane;
 	JTextField		quiz_num_textField;
-
+	private int 	count;
+	ClientManager 	cm = new ClientManager();
 	/**
 	 * Create the frame.
 	 */
 
-	public boolean checkinput(String quiz_num_textField)
-	{
-		boolean result = false;
-		char charinput;
-		for (int i = 0; i < quiz_num_textField.length(); i++)
-		{
-			charinput = quiz_num_textField.charAt(i);
-
-			if (charinput >= 0x30 && charinput <= 0x39)
-			{
-				result = true;
-			}
-		}
-		return result;
-	}
 
 	public Quiz_SelectOption()
 	{
@@ -63,9 +51,13 @@ public class Quiz_SelectOption extends JFrame
 		quiz_num_label.setBounds(21, 71, 139, 44);
 		contentPane.add(quiz_num_label);
 
-		quiz_num_textField = new JTextField("");
+		count = cm.data_all();
+		String allCount = Integer.toString(count);
+		quiz_num_textField = new JTextField();
 		quiz_num_textField.setFont(new Font("a옛날사진관3", Font.PLAIN, 20));
 		quiz_num_textField.setBounds(174, 77, 195, 36);
+		quiz_num_textField.setText(allCount);
+		quiz_num_textField.setForeground(Color.gray);
 		contentPane.add(quiz_num_textField);
 
 		JLabel player_label = new JLabel("인       원 : ");
@@ -116,6 +108,20 @@ public class Quiz_SelectOption extends JFrame
 		quiz_cancel_Btn.setFont(new Font("a옛날사진관3", Font.PLAIN, 25));
 		quiz_cancel_Btn.setBounds(253, 248, 146, 44);
 		contentPane.add(quiz_cancel_Btn);
+		
+		quiz_ok_Btn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				
+				//라디오 버튼 선택에 따라 다음 메뉴를 분리해서 불러온다.
+				if(e.getSource() == player_1_btn) new ClientQuizUI();
+				else if(e.getSource() == player_2_btn) new Quiz_Input_IP();
+			
+			}
+		});
+		
 		quiz_cancel_Btn.addActionListener(new ActionListener()
 		{
 			@Override
@@ -127,5 +133,43 @@ public class Quiz_SelectOption extends JFrame
 		});
 
 		setVisible(true);
+		
+		quiz_num_textField.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				quiz_num_textField.setText("");
+				quiz_num_textField.setForeground(Color.BLACK);
+				
+				if(quiz_num_textField.getText().equals(null)) {
+					JOptionPane.showConfirmDialog(null, "값을 입력해주세요");
+				}
+				int quiz_list = Integer.parseInt(quiz_num_textField.getText());
+				try {
+					if(quiz_list <= 0) JOptionPane.showConfirmDialog(null, "문제 갯수는 1 이상이어야 합니다.");
+					else if(quiz_list > count) JOptionPane.showConfirmDialog(null, "문제의 최대수를 초과합니다.");
+					else cm.getQuizList(quiz_list);
+				} catch (Exception e2) {
+					JOptionPane.showConfirmDialog(null, "숫자를 입력해주세요.");
+				}
+			}
+		});
+		
+		player_1_btn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
+		
+		player_2_btn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
+		
 	}
+	
 }
