@@ -8,6 +8,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -133,13 +135,29 @@ public class Quiz_SelectOption extends JFrame
 		});
 
 		setVisible(true);
+		quiz_num_textField.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				quiz_num_textField.setText("");
+				quiz_num_textField.setForeground(Color.BLACK);
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {}
+			@Override
+			public void mouseExited(MouseEvent e) {}
+			@Override
+			public void mousePressed(MouseEvent e) {}
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+		});
+		
 		
 		quiz_num_textField.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				quiz_num_textField.setText("");
-				quiz_num_textField.setForeground(Color.BLACK);
 				
 				if(quiz_num_textField.getText().equals(null)) {
 					JOptionPane.showConfirmDialog(null, "값을 입력해주세요");
@@ -158,7 +176,6 @@ public class Quiz_SelectOption extends JFrame
 		player_1_btn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
 			}
 		});
 		
