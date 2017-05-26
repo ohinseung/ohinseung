@@ -19,7 +19,7 @@ import javax.swing.border.EmptyBorder;
 import exception.ManagerException;
 import vo.Tango;
 
-public class InsertUI extends JFrame 
+public class ClientInsertUI extends JFrame 
 {
 	private JPanel contentPane;
 	public JTextField add_Hanja;
@@ -32,7 +32,7 @@ public class InsertUI extends JFrame
 	/**
 	 * Create the frame.
 	 */
-	public InsertUI() 
+	public ClientInsertUI() 
 	{	
 		image=null;
 		
@@ -116,7 +116,7 @@ public class InsertUI extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
-				MainUI mu = new MainUI();
+				ClientMainUI mu = new ClientMainUI();
 				dispose();
 			}
 		});
@@ -168,7 +168,7 @@ public class InsertUI extends JFrame
 					
 					if(insertResult){
 						JOptionPane.showMessageDialog(null, "등록을 성공 하였습니다.");
-						MainUI mu = new MainUI();
+						ClientMainUI mu = new ClientMainUI();
 						dispose();
 					}		
 				}

@@ -244,24 +244,18 @@ public class serverManager implements Manager{
 		try {
 			con = ConnectionManager.getConnection();
 			if(newData.getimagebuf() != null){
-				String sql = "update Tangore set image =? where row_id = ?";
+				String sql = "update Tangore set hiragana=?, hanja=?, meaning=?, image =? where row_id = ?";
 				PreparedStatement pstmt 	= con.prepareStatement(sql);
 				ByteArrayInputStream bais 	= null;
 				bais = new ByteArrayInputStream(newData.getimagebuf());
-				pstmt.setBinaryStream(1, bais);
-				pstmt.setInt(2, newData.getRow_id());
-				pstmt.executeUpdate();
-			}else{				
-				String sql = "update Tangore set hiragana=?, hanja=?, meaning=? where row_id = ?";
-				PreparedStatement pstmt = con.prepareStatement(sql);
-				
 				pstmt.setString(1, newData.getHiragana());
 				pstmt.setString(2, newData.getHanja());
 				pstmt.setString(3, newData.getMeaning());
-				pstmt.setInt(4, newData.getRow_id());
+				pstmt.setBinaryStream(4, bais);
+				pstmt.setInt(5, newData.getRow_id());
 				pstmt.executeUpdate();
+				result = true;
 			}			
-			result = true;
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

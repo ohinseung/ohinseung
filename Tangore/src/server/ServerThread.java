@@ -86,7 +86,8 @@ public class ServerThread implements Runnable {
 						boolean deleteAll = sm.deleteAll();
 						noos.writeObject(deleteAll);
 						System.out.println("[System] 전체 삭제 성공");
-						break;
+						break;						
+					
 				}
 			} catch (IOException e) {
 				exit = true;

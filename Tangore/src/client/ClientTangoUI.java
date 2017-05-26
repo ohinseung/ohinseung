@@ -29,7 +29,7 @@ import javax.swing.table.TableColumnModel;
 import exception.ManagerException;
 import vo.Tango;
 
-public class SearchUI extends JFrame implements ActionListener{
+public class ClientTangoUI extends JFrame implements ActionListener{
 	
 	
 	private JPanel btn_panel;
@@ -39,13 +39,12 @@ public class SearchUI extends JFrame implements ActionListener{
 	private JTable tangoTable; 
 	private boolean updateResult = false;
 
-	public SearchUI()
+	public ClientTangoUI()
 	{	//list 가져오기
 		ArrayList<Tango> list = null;
 		try {
 			list = cm.getTangoList();
 			if(list != null)System.out.println("[System] 단어장 가져오기 성공");
-			//Collections.reverse(list);
 		} catch (ManagerException e) {
 			e.printStackTrace();
 		}			
@@ -96,8 +95,8 @@ public class SearchUI extends JFrame implements ActionListener{
         tangoTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		//JTable 크기/ 정렬 / 폰트 / 수정 가능 여부 지정
-		tangoTable.setFont(new Font("a옛날사진관3", Font.PLAIN, 32));
-		tangoTable.getTableHeader().setFont(new Font("a옛날사진관3", Font.PLAIN, 32));
+		tangoTable.setFont(new Font("MSGothic", Font.PLAIN, 32));
+		tangoTable.getTableHeader().setFont(new Font("MSGothic", Font.PLAIN, 32));
 		tangoTable.setRowHeight(100);
 		tangoTable.getTableHeader().setReorderingAllowed(false);
 		tableCellCenter(tangoTable);
@@ -209,7 +208,7 @@ public class SearchUI extends JFrame implements ActionListener{
 				        fc.setMultiSelectionEnabled(false);
 				        fc.setCurrentDirectory(new File("C:\\tmp"));
 				        int Checker = fc.showOpenDialog(null);
-				        
+
 				        //이미지 윈도우 탐색창확인
 				        if(Checker == JFileChooser.APPROVE_OPTION){
 				        	System.out.println("이미지 경로 찾기 중");
@@ -247,18 +246,14 @@ public class SearchUI extends JFrame implements ActionListener{
 						String update = (String) JOptionPane.showInputDialog(null, "수정할 단어를 입력해주세요");
 						switch(updateSelected){										
 						case "히라가나" : 
-							updateResult	= cm.updateTango(newData);
-							newData 		= new Tango(tango.getRow_id(), update, tango.getHanja(), tango.getMeaning(), tango.getimagebuf());
+							newData = new Tango(tango.getRow_id(), update, 				tango.getHanja(), 	tango.getMeaning(), tango.getimagebuf());
 							break;
 						case "한자" 	: 
-							updateResult 	= cm.updateTango(newData);
-							newData 		= new Tango(tango.getRow_id(), tango.getHiragana(), update, tango.getMeaning(), tango.getimagebuf());
+							newData = new Tango(tango.getRow_id(), tango.getHiragana(), update, 			tango.getMeaning(), tango.getimagebuf());
 							break;
 						case "뜻" 		: 
-							updateResult 	= cm.updateTango(newData);
-							newData 		= new Tango(tango.getRow_id(), tango.getHiragana(), tango.getHanja(), update, tango.getimagebuf());
+							newData = new Tango(tango.getRow_id(), tango.getHiragana(), tango.getHanja(), 	update, 			tango.getimagebuf());
 							break;
-						default : return;
 						}
 						//업데이트 결과 가져오기
 						updateResult 	= cm.updateTango(newData);
@@ -331,7 +326,7 @@ public class SearchUI extends JFrame implements ActionListener{
 			break;
 		//돌아가기
 		case "돌아가기":
-			new MainUI();			
+			new ClientMainUI();			
 			dispose();
 			break;
 		}

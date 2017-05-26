@@ -16,7 +16,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class Quiz_1 extends JFrame 
+public class Quiz_SelectOption extends JFrame 
 {
 	private JPanel contentPane;
 	JTextField quiz_num_textField;
@@ -40,7 +40,7 @@ public class Quiz_1 extends JFrame
 		}
 		return result;
 	}
-	public Quiz_1() 
+	public Quiz_SelectOption() 
 	{
 		setTitle("문제풀이");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

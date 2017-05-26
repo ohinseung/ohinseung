@@ -160,6 +160,12 @@ public class ClientManager implements Manager{
 		ArrayList<Tango> quizList = (ArrayList<Tango>) sendRequest(msg);
 		return quizList;
 	}
+	
+	public int getQuizResult(int score) {
+		Object[] msg = {"getQuizResult", score};
+		int quizResult = (Integer) sendRequest(msg);
+		return quizResult;
+	}
 
 	/**
 	 * 서버로 요청을 보낸다
@@ -184,6 +190,23 @@ public class ClientManager implements Manager{
 	 * 열어 놓은 스트림들을 모두 닫는다.
 	 */
 	public void closeStreams() {
+		// 오브젝트 인풋 스트림이 존재하면 닫는다
+		if (ois != null) {
+			try {
+				ois.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// 오브젝트 아웃풋 스트림이 존재하면 닫는다
+		if (oos != null) {
+			try {
+				oos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		// 인풋 스트림이 존재하면 닫는다
 		if (is != null) {
 			try {
@@ -202,23 +225,6 @@ public class ClientManager implements Manager{
 			}
 		}
 
-		// 오브젝트 인풋 스트림이 존재하면 닫는다
-		if (ois != null) {
-			try {
-				ois.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		// 오브젝트 아웃풋 스트림이 존재하면 닫는다
-		if (oos != null) {
-			try {
-				oos.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 	//사진 크기 설정 메소드
 	public ImageIcon getScaledImage(byte[] imagebuf, int w, int h) {		

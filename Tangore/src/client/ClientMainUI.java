@@ -5,19 +5,23 @@ package client;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class MainUI extends JFrame implements ActionListener{
+import exception.ManagerException;
+
+public class ClientMainUI extends JFrame implements ActionListener{
 	
 	private JPanel mainPanel;
 	private JButton btn_tangoInsert;
 	private JButton btn_tangoshou;
 	private JButton btn_tangoQuiz;
 	
-	public MainUI() {
+	public ClientMainUI() {
 		setTitle("탕고래");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 700);
@@ -47,6 +51,12 @@ public class MainUI extends JFrame implements ActionListener{
 		
 		setVisible(true);
 		
+		addWindowListener(new WindowAdapter() {
+	        public void windowClosing(WindowEvent e) {
+	            ClientManager cm = new ClientManager();
+	            cm.closeStreams();	           
+	        }
+		});
 	}
 	
 	@Override
@@ -56,17 +66,18 @@ public class MainUI extends JFrame implements ActionListener{
 		if(source == btn_tangoInsert) {
 			//등록버튼을 눌렀을 시 메인메뉴를 보이지 않게 하고
 			//등록 UI를 visible로 설정한다.
-			new InsertUI();
+			new ClientInsertUI();
 			dispose();
 		}
 		else if(source == btn_tangoshou) {
 			//검색 UI생성
-			new SearchUI();
+			new ClientTangoUI();
 			dispose();
 		}
 		else if(source == btn_tangoQuiz) {
-			new Quiz_1();
+			new Quiz_SelectOption();
 			dispose();
 		}
 	}
+	
 }
