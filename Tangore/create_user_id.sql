@@ -3,8 +3,11 @@
  * 사용자 id를 보관하는 table.
  * hr계정에서 생성했다.
  * */
+drop table user_id;
+
 create table user_id
 (
 nickname varchar2(20) primary key,
-status number(1) not null
+status number(1) not null,
+your_id varchar2(20)
 );
