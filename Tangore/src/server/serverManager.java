@@ -17,7 +17,32 @@ import vo.Tango;
 
 public class serverManager implements Manager
 {
+	@Override
+	public boolean setId(String setId)
+	{
+		boolean idResult = false;
+		Connection con = ConnectionManager.getConnection();
 
+		try
+		{
+			String sql = "insert into user_id values (?, 0)";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+
+			// id
+			pstmt.setString(1, setId);
+			pstmt.executeUpdate();
+			idResult = true;
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		} finally
+		{
+			ConnectionManager.close(con);
+		}
+		return idResult;
+	}
+	
 	@Override
 	public boolean insertTango(Tango tango)
 	{
@@ -391,7 +416,8 @@ public class serverManager implements Manager
 	public int data_all(int maxcount) throws ManagerException
 	{
 		Connection con = null;
-
+		int count = 0;
+		
 		try
 		{
 			con = ConnectionManager.getConnection();
@@ -400,7 +426,7 @@ public class serverManager implements Manager
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next())
 			{
-				maxcount = rs.getInt(1);
+				count = rs.getInt(1);
 			}
 		}
 
@@ -413,6 +439,6 @@ public class serverManager implements Manager
 		{
 			ConnectionManager.close(con);
 		}
-		return maxcount;
+		return count;
 	}
 }

@@ -35,6 +35,12 @@ public class ServerThread implements Runnable
 
 				switch (ObjectName)
 				{
+				case "setId":
+					boolean idResult = sm.setId((String) ObjectMain);
+					noos.writeObject(idResult);
+					System.out.println("[System] ID 등록성공");
+					break;
+				
 				case "insert":
 					boolean result = sm.insertTango((Tango) ObjectMain);
 					noos.writeObject(result);

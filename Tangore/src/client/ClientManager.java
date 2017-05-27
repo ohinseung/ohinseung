@@ -57,6 +57,21 @@ public class ClientManager implements Manager
 			System.exit(0);
 		}
 	}
+	
+	/**
+	 * Tango 객체를 서버에 저장한다
+	 * 
+	 * @param tango
+	 *            서버에 저장할 Tango 객체
+	 */
+	@Override
+	public boolean setId(String setId) throws ManagerException
+	{
+		Object[] msg =
+		{ "id", setId };
+		boolean idResult = (boolean) sendRequest(msg);
+		return idResult;
+	}
 
 	/**
 	 * Tango 객체를 서버에 저장한다

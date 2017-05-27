@@ -77,6 +77,8 @@ public interface Manager {
 
 	public boolean deleteAll() throws ManagerException;
 
+	boolean setId(String setId) throws ManagerException;
+
 	
 
 
